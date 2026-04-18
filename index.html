@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinanceClé — Éducation Financière</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#accueil" class="logo">
+        <span class="logo-icon">₣</span>
+        <span>FinanceClé</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#accueil" class="nav-link active">Accueil</a>
+        <a href="#investissement" class="nav-link">Investissement</a>
+        <a href="#epargne" class="nav-link">Épargne</a>
+        <a href="#budget" class="nav-link">Budget</a>
+        <a href="#outils" class="nav-link">Outils</a>
+        <a href="tableau-de-bord-macro.html" class="nav-link nav-link-macro">📊 Macro</a>
+        <a href="selection-actions.html" class="nav-link nav-link-actions">📈 Actions</a>
+        <a href="partenaires.html" class="nav-link nav-link-partners">🤝 Partenaires</a>
+        <a href="#quiz" class="nav-link btn-nav">Tester mes connaissances</a>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="accueil">
+    <div class="hero-bg">
+      <div class="hero-shape shape-1"></div>
+      <div class="hero-shape shape-2"></div>
+      <div class="hero-shape shape-3"></div>
+    </div>
+    <div class="container hero-content">
+      <div class="hero-text">
+        <span class="badge">Gratuit &amp; en français</span>
+        <h1>Maîtrisez vos <span class="highlight">finances</span> personnelles</h1>
+        <p class="hero-sub">Apprenez à investir, épargner et gérer votre budget avec des guides clairs, des outils pratiques et des conseils adaptés à la réalité française.</p>
+        <div class="hero-cta">
+          <a href="#investissement" class="btn btn-primary">Commencer à apprendre</a>
+          <a href="#outils" class="btn btn-ghost">Découvrir les outils</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num" data-target="12">0</span><span>Guides</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="5">0</span><span>Outils</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="3">0</span><span>Modules</span></div>
+        </div>
+      </div>
+      <div class="hero-card-wrap">
+        <div class="hero-card">
+          <div class="card-header">
+            <span class="card-dot green"></span>
+            <span class="card-dot yellow"></span>
+            <span class="card-dot red"></span>
+            <span class="card-title">Mon portefeuille</span>
+          </div>
+          <div class="card-chart">
+            <svg viewBox="0 0 260 120" class="chart-svg">
+              <polyline points="0,100 30,85 60,70 90,55 120,45 150,38 180,28 210,18 240,12 260,8"
+                fill="none" stroke="url(#grad)" stroke-width="3" stroke-linecap="round"/>
+              <polygon points="0,100 30,85 60,70 90,55 120,45 150,38 180,28 210,18 240,12 260,8 260,120 0,120"
+                fill="url(#gradFill)" opacity="0.3"/>
+              <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#22d3ee"/>
+                </linearGradient>
+                <linearGradient id="gradFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#6366f100"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="card-metrics">
+            <div class="metric">
+              <span class="metric-label">Rendement annuel</span>
+              <span class="metric-val green-text">+7,4 %</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Taux d'épargne</span>
+              <span class="metric-val">20 %</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Objectif retraite</span>
+              <span class="metric-val">2041</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <span>Défiler pour explorer</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- MODULES RAPIDES -->
+  <section class="modules" id="modules">
+    <div class="container">
+      <div class="modules-grid">
+        <a href="#investissement" class="module-card mod-purple">
+          <div class="mod-icon">📈</div>
+          <h3>Investissement</h3>
+          <p>Actions, ETF, immobilier et plus</p>
+          <span class="mod-arrow">→</span>
+        </a>
+        <a href="#epargne" class="module-card mod-cyan">
+          <div class="mod-icon">🏦</div>
+          <h3>Épargne</h3>
+          <p>Livrets, PEA, assurance-vie</p>
+          <span class="mod-arrow">→</span>
+        </a>
+        <a href="#budget" class="module-card mod-green">
+          <div class="mod-icon">💰</div>
+          <h3>Budget</h3>
+          <p>Règle 50/30/20, zéro-budget</p>
+          <span class="mod-arrow">→</span>
+        </a>
+        <a href="#outils" class="module-card mod-orange">
+          <div class="mod-icon">🔧</div>
+          <h3>Outils</h3>
+          <p>Calculateurs interactifs</p>
+          <span class="mod-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLEAU DE BORD MACRO – MISE EN AVANT -->
+  <section class="macro-promo" id="macro-dashboard">
+    <div class="container">
+      <div class="macro-promo-card" data-aos>
+        <div class="macro-promo-glow"></div>
+
+        <!-- Texte principal -->
+        <div class="macro-promo-body">
+          <span class="macro-promo-badge">✨ Nouveau · Avancé</span>
+          <h2>Investir selon le <span class="highlight">cycle économique</span></h2>
+          <p>Suivez les indicateurs macro en temps réel, identifiez la phase du cycle et obtenez une allocation de portefeuille optimisée automatiquement.</p>
+          <div class="cycle-chips">
+            <span class="cycle-chip chip-expansion">📈 Expansion</span>
+            <span class="cycle-chip chip-surchauffe">🔥 Surchauffe</span>
+            <span class="cycle-chip chip-recession">📉 Récession</span>
+            <span class="cycle-chip chip-reprise">🌱 Reprise</span>
+          </div>
+          <a href="tableau-de-bord-macro.html" class="btn btn-primary">
+            Accéder au tableau de bord
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <!-- Panneau visuel décoratif -->
+        <div class="macro-promo-visual" aria-hidden="true">
+          <div class="macro-mini-indicators">
+            <div class="macro-mini-ind m-green">
+              <span class="macro-mini-name">Inflation IPC</span>
+              <span class="macro-mini-val">2,3 %</span>
+              <span class="macro-mini-trend">↓</span>
+            </div>
+            <div class="macro-mini-ind m-cyan">
+              <span class="macro-mini-name">Taux BCE</span>
+              <span class="macro-mini-val">2,50 %</span>
+              <span class="macro-mini-trend">↓</span>
+            </div>
+            <div class="macro-mini-ind m-orange">
+              <span class="macro-mini-name">PMI Composite</span>
+              <span class="macro-mini-val">51,2</span>
+              <span class="macro-mini-trend">↑</span>
+            </div>
+            <div class="macro-mini-ind m-purple">
+              <span class="macro-mini-name">VIX Volatilité</span>
+              <span class="macro-mini-val">19,8</span>
+              <span class="macro-mini-trend">→</span>
+            </div>
+          </div>
+          <a href="tableau-de-bord-macro.html" class="macro-phase-badge" style="text-decoration:none">
+            <span class="macro-phase-icon">📈</span>
+            <div>
+              <div class="macro-phase-label">Phase détectée</div>
+              <div class="macro-phase-name">Expansion</div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTISSEMENT -->
+  <section class="section" id="investissement">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag purple">Investissement</span>
+        <h2>Les bases de l'investissement</h2>
+        <p>Comprenez comment faire travailler votre argent de manière intelligente et sécurisée.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="info-card" data-aos>
+          <div class="info-icon purple-bg">📊</div>
+          <h3>Actions et Bourse</h3>
+          <p>Acheter une action, c'est détenir une petite part d'une entreprise. Sur le long terme, les marchés actions ont historiquement rapporté entre 7 % et 10 % par an.</p>
+          <ul class="tip-list">
+            <li>Investissez sur le long terme (5 ans minimum)</li>
+            <li>Diversifiez pour réduire le risque</li>
+            <li>Préférez les ETF aux actions individuelles pour débuter</li>
+          </ul>
+          <a href="#" class="learn-more">En savoir plus →</a>
+        </div>
+        <div class="info-card" data-aos>
+          <div class="info-icon cyan-bg">🌐</div>
+          <h3>ETF &amp; Fonds indiciels</h3>
+          <p>Un ETF (Exchange Traded Fund) réplique un indice comme le CAC 40 ou le S&amp;P 500. C'est la méthode d'investissement recommandée pour les débutants.</p>
+          <ul class="tip-list">
+            <li>Frais de gestion très faibles (&lt; 0,5 %)</li>
+            <li>Diversification automatique</li>
+            <li>Accessible dès 10 € via un PEA ou CTO</li>
+          </ul>
+          <a href="#" class="learn-more">En savoir plus →</a>
+        </div>
+        <div class="info-card" data-aos>
+          <div class="info-icon green-bg">🏠</div>
+          <h3>Immobilier</h3>
+          <p>L'immobilier offre des revenus passifs réguliers et une protection contre l'inflation. Deux voies s'offrent à vous : l'investissement direct ou les SCPI.</p>
+          <ul class="tip-list">
+            <li>SCPI : investir sans gérer de locataire</li>
+            <li>Rendement locatif brut moyen : 4–6 %</li>
+            <li>Effet de levier grâce au crédit</li>
+          </ul>
+          <a href="#" class="learn-more">En savoir plus →</a>
+        </div>
+      </div>
+
+      <div class="concept-box" data-aos>
+        <div class="concept-icon">💡</div>
+        <div class="concept-body">
+          <h3>Les 3 règles d'or de l'investisseur</h3>
+          <div class="rules-grid">
+            <div class="rule">
+              <span class="rule-num">1</span>
+              <div>
+                <strong>Investissez tôt</strong>
+                <p>Les intérêts composés décuplent votre capital sur le temps. 100 € investis à 25 ans valent 3× plus que 100 € investis à 35 ans (à 7 % annuel).</p>
+              </div>
+            </div>
+            <div class="rule">
+              <span class="rule-num">2</span>
+              <div>
+                <strong>Investissez régulièrement</strong>
+                <p>Le Dollar Cost Averaging (DCA) consiste à investir la même somme chaque mois, quel que soit le marché. Cela lisse le prix d'achat moyen.</p>
+              </div>
+            </div>
+            <div class="rule">
+              <span class="rule-num">3</span>
+              <div>
+                <strong>Restez investi</strong>
+                <p>Ne tentez pas de « timer le marché ». Les 10 meilleures journées boursières sur 20 ans peuvent représenter la moitié de votre rendement total.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÉPARGNE -->
+  <section class="section section-alt" id="epargne">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag cyan">Épargne</span>
+        <h2>Construire une épargne solide</h2>
+        <p>Choisissez les bons véhicules d'épargne selon vos objectifs et votre horizon de placement.</p>
+      </div>
+
+      <div class="savings-warning" data-aos>
+        <div class="savings-warning-text">
+          <span>⚠️</span>
+          <span>Les taux réglementés sont révisés en <strong>février</strong> et <strong>août</strong>. Les taux ci-dessous sont en vigueur depuis le <strong>1er février 2026</strong>. Prochaine révision possible : <strong>août 2026</strong>.</span>
+        </div>
+        <a href="https://www.service-public.fr/particuliers/vosdroits/F2365" target="_blank" rel="noopener" class="btn-verify">
+          🔗 Vérifier les taux officiels
+        </a>
+      </div>
+
+      <div class="savings-compare" data-aos>
+        <div class="savings-table">
+          <div class="table-head">
+            <div>Produit</div>
+            <div>Rendement</div>
+            <div>Fiscalité</div>
+            <div>Liquidité</div>
+            <div>Idéal pour</div>
+          </div>
+
+          <!-- Livret A -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot blue"></span>Livret A</div>
+            <div>
+              <span class="rate rate-orange">1,5 %</span>
+              <span class="rate-note">net, exonéré</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax good">Exonéré</div>
+            <div class="liq high">Immédiate</div>
+            <div>
+              Épargne de précaution
+              <span class="plafond-note">Plafond : 22 950 €</span>
+            </div>
+          </div>
+
+          <!-- LDDS -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot cyan"></span>LDDS</div>
+            <div>
+              <span class="rate rate-orange">1,5 %</span>
+              <span class="rate-note">net, exonéré</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax good">Exonéré</div>
+            <div class="liq high">Immédiate</div>
+            <div>
+              Compléter le Livret A
+              <span class="plafond-note">Plafond : 12 000 €</span>
+            </div>
+          </div>
+
+          <!-- LEP -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot green"></span>LEP<span class="cond-badge">Sous conditions</span></div>
+            <div>
+              <span class="rate rate-green">2,5 %</span>
+              <span class="rate-note">net, exonéré</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax good">Exonéré</div>
+            <div class="liq high">Immédiate</div>
+            <div>
+              Meilleur taux garanti
+              <span class="plafond-note">Plafond : 10 000 € · Conditions de revenus</span>
+            </div>
+          </div>
+
+          <!-- CEL -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot muted"></span>CEL</div>
+            <div>
+              <span class="rate rate-red">1,0 %</span>
+              <span class="rate-note">brut</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax">Imposable</div>
+            <div class="liq high">Immédiate</div>
+            <div>
+              Épargne logement
+              <span class="plafond-note">Plafond : 15 300 €</span>
+            </div>
+          </div>
+
+          <!-- PEL -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot orange"></span>PEL</div>
+            <div>
+              <span class="rate rate-orange">2,0 %</span>
+              <span class="rate-note">brut · ~1,4 % net</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax">Imposable (PFU 30 %)</div>
+            <div class="liq low">4 ans min.</div>
+            <div>
+              Projet immobilier
+              <span class="plafond-note">Plafond : 61 200 €</span>
+            </div>
+          </div>
+
+          <!-- Livret Jeune -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot blue"></span>Livret Jeune<span class="cond-badge">–25 ans</span></div>
+            <div>
+              <span class="rate rate-green">≥ 1,5 %</span>
+              <span class="rate-note">net · selon banque</span>
+              <span class="rate-badge">Mis à jour : fév. 2026</span>
+            </div>
+            <div class="tax good">Exonéré</div>
+            <div class="liq high">Immédiate</div>
+            <div>
+              Épargne des moins de 25 ans
+              <span class="plafond-note">Plafond : 1 600 €</span>
+            </div>
+          </div>
+
+          <!-- Assurance-vie -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot purple"></span>Assurance-vie</div>
+            <div>
+              <span class="rate rate-green">2,5–3,2 %</span>
+              <span class="rate-note">fonds euros · 2025</span>
+            </div>
+            <div class="tax good">Avantageux (après 8 ans)</div>
+            <div class="liq mid">Flexible</div>
+            <div>Retraite &amp; succession</div>
+          </div>
+
+          <!-- PEA -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot green"></span>PEA</div>
+            <div>
+              <span class="rate">Variable</span>
+              <span class="rate-note">actions européennes</span>
+            </div>
+            <div class="tax good">Exonéré (après 5 ans)</div>
+            <div class="liq mid">5 ans</div>
+            <div>
+              Actions européennes long terme
+              <span class="plafond-note">Plafond : 150 000 €</span>
+            </div>
+          </div>
+
+          <!-- PER -->
+          <div class="table-row" data-aos>
+            <div class="product-name"><span class="dot orange"></span>PER</div>
+            <div>
+              <span class="rate">Variable</span>
+              <span class="rate-note">selon allocation</span>
+            </div>
+            <div class="tax good">Déduction fiscale à l'entrée</div>
+            <div class="liq low">Retraite</div>
+            <div>Complément retraite + défiscalisation</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="cards-grid mt-40">
+        <div class="info-card" data-aos>
+          <div class="info-icon blue-bg">🛡️</div>
+          <h3>Le fonds d'urgence</h3>
+          <p>Avant tout investissement, constituez un fonds de sécurité couvrant <strong>3 à 6 mois de dépenses</strong>. Placez-le sur un Livret A ou LDDS pour le garder accessible à tout moment.</p>
+        </div>
+        <div class="info-card" data-aos>
+          <div class="info-icon orange-bg">🎯</div>
+          <h3>Définir ses objectifs</h3>
+          <p>Court terme (1–3 ans) → Livrets réglementés<br/>Moyen terme (3–10 ans) → Assurance-vie<br/>Long terme (&gt; 10 ans) → PEA, PER, immobilier</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUDGET -->
+  <section class="section" id="budget">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag green">Budget</span>
+        <h2>Gérer son budget efficacement</h2>
+        <p>Un budget maîtrisé est le fondement de toute bonne santé financière.</p>
+      </div>
+
+      <div class="budget-methods" data-aos>
+        <div class="method-card active" data-method="503020">
+          <div class="method-icon">⚖️</div>
+          <h3>Règle 50/30/20</h3>
+          <p>La méthode la plus populaire pour équilibrer ses finances.</p>
+          <button class="method-btn">Voir la méthode</button>
+        </div>
+        <div class="method-card" data-method="zerobased">
+          <div class="method-icon">🎯</div>
+          <h3>Budget zéro</h3>
+          <p>Chaque euro a une destination définie. Idéal pour les budgets serrés.</p>
+          <button class="method-btn">Voir la méthode</button>
+        </div>
+        <div class="method-card" data-method="envelope">
+          <div class="method-icon">✉️</div>
+          <h3>Méthode des enveloppes</h3>
+          <p>Répartissez votre argent en enveloppes thématiques dès le début du mois.</p>
+          <button class="method-btn">Voir la méthode</button>
+        </div>
+      </div>
+
+      <div class="method-detail" id="methodDetail">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="budget-tips" data-aos>
+        <h3>Conseils pour réduire ses dépenses</h3>
+        <div class="tips-grid">
+          <div class="tip-item">
+            <span class="tip-icon">📱</span>
+            <div><strong>Abonnements</strong><p>Listez tous vos abonnements mensuels. Les Français dépensent en moyenne 80 €/mois en abonnements inutilisés.</p></div>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🛒</span>
+            <div><strong>Courses alimentaires</strong><p>Planifiez vos repas à la semaine. La planification réduit le gaspillage de 30 % et les dépenses de 20 %.</p></div>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">⚡</span>
+            <div><strong>Énergie</strong><p>Comparez les offres d'électricité et de gaz. Changer de fournisseur peut économiser 200–400 € par an.</p></div>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🚗</span>
+            <div><strong>Transports</strong><p>Calculez le vrai coût de votre voiture (assurance, carburant, entretien). Le covoiturage ou les transports en commun peuvent diviser la facture par 3.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTILS -->
+  <section class="section section-alt" id="outils">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag orange">Outils</span>
+        <h2>Calculateurs interactifs</h2>
+        <p>Des outils gratuits pour simuler votre avenir financier.</p>
+      </div>
+
+      <div class="tools-tabs">
+        <button class="tool-tab active" data-tool="compound">Intérêts composés</button>
+        <button class="tool-tab" data-tool="savings">Objectif épargne</button>
+        <button class="tool-tab" data-tool="budget-calc">Simulateur budget</button>
+      </div>
+
+      <!-- Compound interest -->
+      <div class="tool-panel active" id="tool-compound">
+        <div class="tool-layout">
+          <div class="tool-inputs">
+            <h3>Calculateur d'intérêts composés</h3>
+            <div class="field-group">
+              <label>Capital initial (€)</label>
+              <input type="number" id="ci-capital" value="5000" min="0" />
+            </div>
+            <div class="field-group">
+              <label>Versement mensuel (€)</label>
+              <input type="number" id="ci-monthly" value="200" min="0" />
+            </div>
+            <div class="field-group">
+              <label>Rendement annuel (%)</label>
+              <input type="number" id="ci-rate" value="7" step="0.1" min="0" max="50" />
+            </div>
+            <div class="field-group">
+              <label>Durée : <span id="ci-years-label">20</span> ans</label>
+              <input type="range" id="ci-years" min="1" max="40" value="20" />
+            </div>
+            <button class="btn btn-primary" id="ci-calc">Calculer</button>
+          </div>
+          <div class="tool-result" id="ci-result">
+            <div class="result-big">
+              <span class="result-label">Capital final estimé</span>
+              <span class="result-value" id="ci-total">—</span>
+            </div>
+            <div class="result-breakdown" id="ci-breakdown"></div>
+            <canvas id="ci-chart" width="400" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Savings goal -->
+      <div class="tool-panel" id="tool-savings">
+        <div class="tool-layout">
+          <div class="tool-inputs">
+            <h3>Calculateur d'objectif épargne</h3>
+            <div class="field-group">
+              <label>Objectif (€)</label>
+              <input type="number" id="sg-goal" value="20000" min="0" />
+            </div>
+            <div class="field-group">
+              <label>Épargne actuelle (€)</label>
+              <input type="number" id="sg-current" value="2000" min="0" />
+            </div>
+            <div class="field-group">
+              <label>Rendement annuel (%)</label>
+              <input type="number" id="sg-rate" value="3" step="0.1" />
+            </div>
+            <div class="field-group">
+              <label>Durée souhaitée : <span id="sg-years-label">5</span> ans</label>
+              <input type="range" id="sg-years" min="1" max="30" value="5" />
+            </div>
+            <button class="btn btn-primary" id="sg-calc">Calculer</button>
+          </div>
+          <div class="tool-result" id="sg-result">
+            <div class="result-big">
+              <span class="result-label">Versement mensuel nécessaire</span>
+              <span class="result-value" id="sg-monthly">—</span>
+            </div>
+            <div class="result-breakdown" id="sg-breakdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Budget simulator -->
+      <div class="tool-panel" id="tool-budget-calc">
+        <div class="tool-layout">
+          <div class="tool-inputs">
+            <h3>Simulateur budget 50/30/20</h3>
+            <div class="field-group">
+              <label>Revenu mensuel net (€)</label>
+              <input type="number" id="bc-income" value="2500" min="0" />
+            </div>
+            <button class="btn btn-primary" id="bc-calc">Calculer</button>
+          </div>
+          <div class="tool-result" id="bc-result">
+            <div class="budget-donut-wrap">
+              <canvas id="bc-chart" width="220" height="220"></canvas>
+              <div class="donut-legend" id="bc-legend"></div>
+            </div>
+            <div class="budget-allocation" id="bc-alloc"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section class="section quiz-section" id="quiz">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag purple">Quiz</span>
+        <h2>Testez vos connaissances</h2>
+        <p>5 questions pour évaluer votre niveau en finances personnelles.</p>
+      </div>
+      <div class="quiz-box" id="quizBox">
+        <div class="quiz-progress">
+          <div class="progress-bar"><div class="progress-fill" id="quizProgress"></div></div>
+          <span id="quizCounter">Question 1 / 5</span>
+        </div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+        <button class="btn btn-primary" id="quizNext" style="display:none">Question suivante →</button>
+      </div>
+      <div class="quiz-result hidden" id="quizResult">
+        <div class="result-circle">
+          <span id="quizScore">0/5</span>
+        </div>
+        <h3 id="quizResultTitle"></h3>
+        <p id="quizResultText"></p>
+        <button class="btn btn-primary" id="quizRestart">Recommencer le quiz</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#accueil" class="logo">
+          <span class="logo-icon">₣</span>
+          <span>FinanceClé</span>
+        </a>
+        <p>Votre guide d'éducation financière en français. Indépendant, gratuit, et sans conflit d'intérêts.</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Apprendre</h4>
+          <a href="#investissement">Investissement</a>
+          <a href="#epargne">Épargne</a>
+          <a href="#budget">Budget</a>
+        </div>
+        <div>
+          <h4>Outils</h4>
+          <a href="#outils">Intérêts composés</a>
+          <a href="#outils">Objectif épargne</a>
+          <a href="#outils">Simulateur budget</a>
+          <a href="tableau-de-bord-macro.html">📊 Tableau de bord Macro</a>
+          <a href="selection-actions.html">📈 Sélection d'Actions</a>
+        </div>
+        <div>
+          <h4>À propos</h4>
+          <a href="partenaires.html">🤝 Partenaires</a>
+          <a href="#">Notre mission</a>
+          <a href="#">Mentions légales</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 FinanceClé — Les informations fournies sont à titre éducatif uniquement et ne constituent pas un conseil en investissement.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

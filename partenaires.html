@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partenaires &amp; Ressources — FinanceClé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6366f1;
+      --purple-dark: #4f46e5;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --bg: #0f0f1a;
+      --bg2: #141428;
+      --surface: #1a1a2e;
+      --surface2: #22223a;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(15,15,26,0.92);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 800;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .back-btn:hover { background: var(--surface); color: #fff; transform: translateX(-2px); }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .nav-pill:hover { background: var(--surface2); color: #fff; }
+    .nav-pill.active {
+      background: rgba(16,185,129,0.1);
+      border-color: rgba(16,185,129,0.3);
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ─── PAGE HEADER ────────────────────────────────────────────── */
+    .page-header {
+      padding: 110px 0 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 65%);
+      top: -80px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%);
+      top: 40px; right: 12%;
+      pointer-events: none;
+    }
+    .page-badge {
+      display: inline-block;
+      background: rgba(16,185,129,0.12);
+      color: var(--green);
+      border: 1px solid rgba(16,185,129,0.28);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .highlight-green {
+      background: linear-gradient(135deg, var(--green), #34d399, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ─── SECTION TITLES ─────────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .section-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 11px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .section-tag.green  { background: rgba(16,185,129,0.12); color: var(--green);  border: 1px solid rgba(16,185,129,0.25); }
+    .section-tag.purple { background: rgba(99,102,241,0.12); color: #a5b4fc;       border: 1px solid rgba(99,102,241,0.25); }
+    .section-tag.orange { background: rgba(245,158,11,0.12); color: var(--orange); border: 1px solid rgba(245,158,11,0.25); }
+
+    /* ─── AFFILIATE NOTICE ───────────────────────────────────────── */
+    .affiliate-notice {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(99,102,241,0.06);
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: var(--radius-sm);
+      padding: 11px 16px;
+      margin-bottom: 28px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .affiliate-notice span:first-child { font-size: 1rem; flex-shrink: 0; }
+
+    /* ─── FEATURED BROKER CARD (Trade Republic) ──────────────────── */
+    .broker-featured {
+      background: var(--surface);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(245,158,11,0.06);
+    }
+    .broker-featured::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .featured-inner {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: start;
+      position: relative;
+    }
+    .broker-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .tr-logo {
+      width: 72px; height: 72px;
+      background: #000;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.04em;
+      border: 2px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .featured-badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: rgba(245,158,11,0.15);
+      color: var(--orange);
+      border: 1px solid rgba(245,158,11,0.35);
+      white-space: nowrap;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .broker-content { min-width: 0; }
+    .broker-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .broker-desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      max-width: 580px;
+    }
+    .broker-perks {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .broker-perks li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 13px;
+    }
+    .broker-perks li .perk-icon { font-size: 0.95rem; flex-shrink: 0; }
+    .broker-footer {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--orange), #d97706);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: all var(--transition);
+      box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,158,11,0.42); color: #fff; }
+    .btn-cta .arrow { transition: transform var(--transition); }
+    .btn-cta:hover .arrow { transform: translateX(3px); }
+    .cta-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .cta-note strong { color: var(--text); }
+
+    /* ─── SECONDARY BROKER CARDS ─────────────────────────────────── */
+    .brokers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 52px;
+    }
+    .broker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .broker-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    .broker-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .broker-icon {
+      width: 52px; height: 52px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      letter-spacing: -0.02em;
+    }
+    .broker-icon.bourso  { background: linear-gradient(135deg, #0d47a1, #1976d2); color: #fff; font-size: 0.8rem; }
+    .broker-icon.fortun  { background: linear-gradient(135deg, #0f5132, #198754); color: #fff; font-size: 0.75rem; }
+    .broker-card-name  { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .broker-card-type  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .broker-card-desc {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+    .broker-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .broker-tag {
+      font-size: 0.71rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface2);
+    }
+    .btn-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 9px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 500;
+      transition: all var(--transition);
+      align-self: flex-start;
+      cursor: default;
+    }
+    .info-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* ─── BOOKS SECTION ──────────────────────────────────────────── */
+    .books-section { margin-bottom: 52px; }
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .book-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .book-card:hover {
+      border-color: rgba(99,102,241,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+    .book-cover {
+      width: 100%;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .book-cover-1 { background: linear-gradient(145deg, #1a1a3e, #2d2d5e); }
+    .book-cover-2 { background: linear-gradient(145deg, #1a2e1a, #2d4a2d); }
+    .book-cover-3 { background: linear-gradient(145deg, #2e1a1a, #4a2d2d); }
+    .book-cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+      );
+    }
+    .book-spine {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 6px;
+      background: rgba(255,255,255,0.1);
+    }
+    .book-emoji { font-size: 3rem; position: relative; z-index: 1; }
+    .book-cover-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .book-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .book-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+    }
+    .book-author {
+      font-size: 0.78rem;
+      color: var(--orange);
+      font-weight: 600;
+    }
+    .book-desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .btn-amazon {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 9px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      color: var(--orange);
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all var(--transition);
+      margin-top: 4px;
+      align-self: flex-start;
+    }
+    .btn-amazon:hover {
+      background: rgba(245,158,11,0.18);
+      border-color: rgba(245,158,11,0.4);
+      color: #fbbf24;
+    }
+
+    /* ─── DISCLAIMER ─────────────────────────────────────────────── */
+    .disclaimer {
+      background: rgba(245,158,11,0.04);
+      border: 1px solid rgba(245,158,11,0.15);
+      border-radius: var(--radius-sm);
+      padding: 15px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 44px;
+    }
+    .disclaimer-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .disclaimer-text { font-size: 0.81rem; color: var(--muted); line-height: 1.65; }
+    .disclaimer-text strong { color: var(--text); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+    .page-footer p { color: var(--muted); font-size: 0.82rem; }
+    .page-footer a { color: var(--orange); }
+    .page-footer a:hover { color: var(--cyan); }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .footer-links a { font-size: 0.83rem; color: var(--muted); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── DIVIDER ────────────────────────────────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .featured-inner {
+        grid-template-columns: 1fr;
+      }
+      .broker-logo-wrap {
+        flex-direction: row;
+        align-items: center;
+      }
+      .broker-featured { padding: 22px; }
+      .broker-perks { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .page-header { padding: 96px 0 36px; }
+      .books-grid { grid-template-columns: 1fr; }
+      .brokers-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">₣</div>
+        <span>FinanceClé</span>
+      </a>
+      <div class="nav-links">
+        <a href="tableau-de-bord-macro.html" class="nav-pill">📊 Macro</a>
+        <a href="selection-actions.html" class="nav-pill">📈 Actions</a>
+        <a href="partenaires.html" class="nav-pill active">🤝 Partenaires</a>
+        <a href="index.html" class="back-btn">← Accueil</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="page-badge">🤝 Ressources sélectionnées</div>
+      <h1>Partenaires &amp; <span class="highlight-green">Ressources</span></h1>
+      <p>Des outils et des références soigneusement sélectionnés pour accompagner votre parcours d'investisseur.</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- ── SECTION COURTIERS ────────────────────────────────── -->
+      <div class="section-header">
+        <span class="section-title">🏦 Courtiers Recommandés</span>
+        <span class="section-tag green">Sélection FinanceClé</span>
+      </div>
+
+      <div class="affiliate-notice">
+        <span>ℹ️</span>
+        <span>Certains liens ci-dessous sont des <strong>liens de parrainage</strong>. Ils vous permettent de bénéficier d'avantages à l'ouverture et contribuent au financement du site — sans impact sur notre analyse indépendante.</span>
+      </div>
+
+      <!-- Trade Republic — carte principale -->
+      <div class="broker-featured">
+        <div class="featured-inner">
+
+          <div class="broker-logo-wrap">
+            <div class="tr-logo">TR</div>
+            <span class="featured-badge">★ Recommandé<br>par FinanceClé</span>
+          </div>
+
+          <div class="broker-content">
+            <div class="broker-name">Trade Republic — Investir sans frais</div>
+            <div class="broker-desc">
+              Le courtier européen qui démocratise l'investissement. Actions, ETF et obligations sans frais de courtage. Plus de 4 millions d'investisseurs en Europe.
+            </div>
+
+            <ul class="broker-perks">
+              <li><span class="perk-icon">✅</span> 0 € de frais de courtage</li>
+              <li><span class="perk-icon">✅</span> Fractionnement d'actions dès 1 €</li>
+              <li><span class="perk-icon">✅</span> ETF et plans d'épargne automatiques</li>
+              <li><span class="perk-icon">✅</span> Intérêts sur liquidités</li>
+              <li><span class="perk-icon">✅</span> Disponible sur PEA et CTO</li>
+            </ul>
+
+            <div class="broker-footer">
+              <a href="https://refnocode.trade.re/b8ht7cqq" target="_blank" rel="noopener sponsored" class="btn-cta">
+                Ouvrir un compte gratuitement <span class="arrow">→</span>
+              </a>
+              <div class="cta-note">
+                <strong>Lien de parrainage.</strong><br>Ouverture en quelques minutes, 100 % en ligne.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Boursobank + Fortuneo — cartes secondaires -->
+      <div class="brokers-grid">
+
+        <!-- Boursobank -->
+        <div class="broker-card">
+          <div class="broker-card-header">
+            <div class="broker-icon bourso">BB</div>
+            <div>
+              <div class="broker-card-name">Boursobank</div>
+              <div class="broker-card-type">Banque en ligne · Courtier</div>
+            </div>
+          </div>
+          <div class="broker-card-desc">
+            Filiale de Société Générale, Boursobank combine banque en ligne et courtier boursier. Idéale pour les investisseurs souhaitant centraliser leur banque et leur PEA au même endroit, avec des frais compétitifs.
+          </div>
+          <div class="broker-tags">
+            <span class="broker-tag">PEA</span>
+            <span class="broker-tag">CTO</span>
+            <span class="broker-tag">Assurance-vie</span>
+            <span class="broker-tag">Banque complète</span>
+          </div>
+          <div class="btn-info">🔍 Informations uniquement</div>
+          <div class="info-label">Pas de lien affilié pour l'instant.</div>
+        </div>
+
+        <!-- Fortuneo -->
+        <div class="broker-card">
+          <div class="broker-card-header">
+            <div class="broker-icon fortun">FO</div>
+            <div>
+              <div class="broker-card-name">Fortuneo</div>
+              <div class="broker-card-type">Banque en ligne · Courtier</div>
+            </div>
+          </div>
+          <div class="broker-card-desc">
+            Courtier reconnu, filiale du Crédit Mutuel Arkéa. Fortuneo se distingue par la qualité de son service client et ses outils de suivi de portefeuille. Une valeur sûre pour les investisseurs actifs.
+          </div>
+          <div class="broker-tags">
+            <span class="broker-tag">PEA</span>
+            <span class="broker-tag">CTO</span>
+            <span class="broker-tag">Assurance-vie</span>
+            <span class="broker-tag">Service client</span>
+          </div>
+          <div class="btn-info">🔍 Informations uniquement</div>
+          <div class="info-label">Pas de lien affilié pour l'instant.</div>
+        </div>
+
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- ── SECTION LIVRES ───────────────────────────────────── -->
+      <div class="books-section">
+        <div class="section-header">
+          <span class="section-title">📚 Livres Recommandés</span>
+          <span class="section-tag purple">Value Investing</span>
+        </div>
+
+        <div class="books-grid">
+
+          <!-- L'Investisseur Intelligent -->
+          <div class="book-card">
+            <div class="book-cover book-cover-1">
+              <div class="book-spine"></div>
+              <div class="book-emoji">📘</div>
+              <div class="book-cover-title">L'Investisseur Intelligent</div>
+            </div>
+            <div class="book-body">
+              <div class="book-title">L'Investisseur Intelligent</div>
+              <div class="book-author">Benjamin Graham</div>
+              <div class="book-desc">
+                La bible du value investing. Graham y expose la philosophie de l'investissement fondamental, la marge de sécurité et la distinction entre investisseur et spéculateur. Un livre fondateur, recommandé par Warren Buffett lui-même.
+              </div>
+              <a href="https://www.amazon.fr/s?k=L%27investisseur+intelligent+Benjamin+Graham" target="_blank" rel="noopener" class="btn-amazon">
+                Voir sur Amazon →
+              </a>
+            </div>
+          </div>
+
+          <!-- Le Petit Livre pour investir à bon prix -->
+          <div class="book-card">
+            <div class="book-cover book-cover-2">
+              <div class="book-spine"></div>
+              <div class="book-emoji">📗</div>
+              <div class="book-cover-title">Investir à bon prix</div>
+            </div>
+            <div class="book-body">
+              <div class="book-title">Le Petit Livre pour investir à bon prix</div>
+              <div class="book-author">Christopher Browne</div>
+              <div class="book-desc">
+                Un guide pratique et accessible pour appliquer les principes du value investing au quotidien. Browne, disciple de Graham, explique comment identifier des actions décotées et construire un portefeuille solide sur le long terme.
+              </div>
+              <a href="https://www.amazon.fr/s?k=Le+Petit+Livre+pour+investir+%C3%A0+bon+prix+Christopher+Browne" target="_blank" rel="noopener" class="btn-amazon">
+                Voir sur Amazon →
+              </a>
+            </div>
+          </div>
+
+          <!-- Actions ordinaires et profits extraordinaires -->
+          <div class="book-card">
+            <div class="book-cover book-cover-3">
+              <div class="book-spine"></div>
+              <div class="book-emoji">📕</div>
+              <div class="book-cover-title">Actions ordinaires, profits extraordinaires</div>
+            </div>
+            <div class="book-body">
+              <div class="book-title">Actions ordinaires et profits extraordinaires</div>
+              <div class="book-author">Philip Fisher</div>
+              <div class="book-desc">
+                L'autre pilier de l'investissement de qualité. Fisher introduit la méthode du "scuttlebutt" — analyse qualitative approfondie des entreprises — et influence directement la vision de Warren Buffett sur les entreprises à fort avantage compétitif.
+              </div>
+              <a href="https://www.amazon.fr/s?k=Actions+ordinaires+et+profits+extraordinaires+Philip+Fisher" target="_blank" rel="noopener" class="btn-amazon">
+                Voir sur Amazon →
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── DISCLAIMER LÉGAL ──────────────────────────────────── -->
+      <div class="disclaimer">
+        <div class="disclaimer-icon">⚠️</div>
+        <div class="disclaimer-text">
+          <strong>Transparence &amp; liens de parrainage :</strong> Certains liens présents sur cette page sont des liens de parrainage. Si vous ouvrez un compte via ces liens, vous pouvez bénéficier d'avantages et FinanceClé peut recevoir une récompense.
+          <strong>Cela ne change pas notre analyse indépendante.</strong> Nous ne recommandons que des services que nous jugeons réellement utiles. Les informations fournies sont à titre éducatif uniquement et ne constituent pas un conseil en investissement.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">← Accueil FinanceClé</a>
+        <a href="tableau-de-bord-macro.html">📊 Tableau de bord Macro</a>
+        <a href="selection-actions.html">📈 Sélection d'Actions</a>
+        <a href="index.html#investissement">Investissement</a>
+        <a href="index.html#epargne">Épargne</a>
+      </div>
+      <p>© 2026 FinanceClé — Données à titre indicatif · <a href="index.html">Retour à l'accueil</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

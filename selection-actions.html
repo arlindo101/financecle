@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sélection d'Actions — FinanceClé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6366f1;
+      --purple-dark: #4f46e5;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --bg: #0f0f1a;
+      --bg2: #141428;
+      --surface: #1a1a2e;
+      --surface2: #22223a;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(15,15,26,0.92);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 800;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .back-btn:hover { background: var(--surface); color: #fff; transform: translateX(-2px); }
+    .nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .nav-pill:hover { background: var(--surface2); color: #fff; }
+    .nav-pill.active {
+      background: rgba(245,158,11,0.1);
+      border-color: rgba(245,158,11,0.3);
+      color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* ─── PAGE HEADER ────────────────────────────────────────────── */
+    .page-header {
+      padding: 110px 0 44px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 65%);
+      top: -80px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+      top: 30px; right: 15%;
+      pointer-events: none;
+    }
+    .page-badge {
+      display: inline-block;
+      background: rgba(245,158,11,0.14);
+      color: var(--orange);
+      border: 1px solid rgba(245,158,11,0.28);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .highlight-gold {
+      background: linear-gradient(135deg, var(--orange), #fbbf24, var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 580px;
+      margin: 0 auto 28px;
+      line-height: 1.65;
+    }
+    .page-header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .header-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .header-stat strong { color: var(--text); }
+
+    /* ─── METHOD BOX ─────────────────────────────────────────────── */
+    .method-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+    .method-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+    }
+    .method-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .method-pts-total {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .method-toggle {
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      color: var(--muted);
+      transition: transform var(--transition);
+      flex-shrink: 0;
+    }
+    .method-toggle.open { transform: rotate(180deg); }
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .method-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--surface2);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .method-pts-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--orange);
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.22);
+      border-radius: 6px;
+      padding: 2px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .method-desc {
+      font-size: 0.79rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .method-desc strong { color: var(--text); }
+
+    /* ─── FILTER BAR ─────────────────────────────────────────────── */
+    .filter-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      white-space: nowrap;
+    }
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 13px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .filter-btn:hover { background: var(--surface2); color: var(--text); }
+    .filter-btn[data-zone="all"].active    { background: rgba(99,102,241,0.14); border-color: rgba(99,102,241,0.35); color: var(--purple); font-weight: 600; }
+    .filter-btn[data-zone="france"].active { background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.35); color: var(--blue); font-weight: 600; }
+    .filter-btn[data-zone="usa"].active    { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0.32); color: #f87171; font-weight: 600; }
+    .filter-btn[data-zone="intl"].active   { background: rgba(16,185,129,0.10); border-color: rgba(16,185,129,0.32); color: var(--green); font-weight: 600; }
+    .filter-divider { width: 1px; height: 26px; background: var(--border); flex-shrink: 0; }
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 13px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .sort-btn:hover { background: var(--surface2); color: var(--text); }
+    .sort-btn.active { background: rgba(6,182,212,0.1); border-color: rgba(6,182,212,0.3); color: var(--cyan); font-weight: 600; }
+    .sort-arrow { font-size: 0.6rem; opacity: 0.55; }
+
+    /* ─── REFRESH BAR ────────────────────────────────────────────── */
+    .refresh-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 13px 18px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .refresh-info {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.86rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .refresh-status-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .refresh-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+    .refresh-dot.loading { background: var(--orange); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 11px;
+      border-radius: 100px;
+      background: var(--surface2);
+      font-size: 0.78rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .stat-pill strong { color: var(--text); }
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--orange), #d97706);
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(245,158,11,0.25);
+      flex-shrink: 0;
+    }
+    .btn-refresh:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(245,158,11,0.35); }
+    .data-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.25);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ─── STOCKS TABLE ───────────────────────────────────────────── */
+    .stocks-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .stocks-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+    .stocks-table thead th {
+      padding: 13px 14px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .th-right { text-align: right !important; }
+    .th-center { text-align: center !important; }
+
+    /* stock row */
+    .stock-row {
+      cursor: pointer;
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+    .stock-row:hover { background: rgba(255,255,255,0.022); }
+    .stock-row.expanded { background: rgba(245,158,11,0.04); border-left: 3px solid rgba(245,158,11,0.4); }
+    .stock-row td { padding: 14px; vertical-align: middle; }
+
+    .rank-cell {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      width: 36px;
+      padding-left: 18px !important;
+    }
+
+    .company-cell { display: flex; align-items: center; gap: 11px; min-width: 160px; }
+    .co-flag { font-size: 1.25rem; line-height: 1; flex-shrink: 0; }
+    .co-name { font-size: 0.93rem; font-weight: 700; color: #fff; line-height: 1.2; }
+    .co-sub  { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    .price-cell { white-space: nowrap; }
+    .price-main { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .price-cur  { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+
+    .score-cell { min-width: 120px; }
+    .score-wrap { display: flex; align-items: center; gap: 9px; }
+    .score-track {
+      flex: 1;
+      height: 5px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 100px;
+      overflow: hidden;
+      min-width: 50px;
+    }
+    .score-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+    .score-fill.sc-green  { background: linear-gradient(90deg, #059669, var(--green)); }
+    .score-fill.sc-orange { background: linear-gradient(90deg, #b45309, var(--orange)); }
+    .score-fill.sc-red    { background: linear-gradient(90deg, #b91c1c, var(--red)); }
+    .score-num { font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
+    .score-num.sc-green  { color: var(--green); }
+    .score-num.sc-orange { color: var(--orange); }
+    .score-num.sc-red    { color: var(--red); }
+
+    .metric-td {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      text-align: right;
+      white-space: nowrap;
+      padding-right: 18px !important;
+    }
+    .metric-td.na-val { color: var(--muted); }
+
+    .badges-td { min-width: 90px; }
+    .badge-buffett {
+      display: block;
+      font-size: 0.67rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(245,158,11,0.13);
+      color: var(--orange);
+      border: 1px solid rgba(245,158,11,0.28);
+      white-space: nowrap;
+      margin-bottom: 3px;
+    }
+    .badge-graham {
+      display: block;
+      font-size: 0.67rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 5px;
+      background: rgba(99,102,241,0.12);
+      color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,0.27);
+      white-space: nowrap;
+    }
+
+    .expand-td { padding-right: 14px !important; }
+    .expand-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.7rem;
+      transition: all var(--transition);
+    }
+    .expand-btn:hover { background: var(--surface); color: #fff; }
+    .expand-btn.open {
+      background: rgba(245,158,11,0.12);
+      border-color: rgba(245,158,11,0.3);
+      color: var(--orange);
+      transform: rotate(180deg);
+    }
+
+    /* ─── DETAIL PANEL ───────────────────────────────────────────── */
+    .detail-row { display: none; }
+    .detail-row.open { display: table-row; }
+    .detail-row td {
+      padding: 0 !important;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,20,0.6);
+    }
+    .detail-inner { padding: 20px 22px 22px; }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .detail-company-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .detail-sector {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 2px 9px;
+      border-radius: 5px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+    }
+    .detail-total {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+    .criterion {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 13px;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .crit-left { flex: 1; min-width: 0; }
+    .crit-name {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .src-badge {
+      font-size: 0.58rem;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .src-live { background: rgba(16,185,129,0.14); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+    .src-ref  { background: rgba(99,102,241,0.14); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.22); }
+    .crit-value {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 3px;
+    }
+    .crit-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .crit-label.warn { color: var(--orange); }
+    .crit-right {
+      text-align: right;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 2px;
+    }
+    .crit-pts {
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .crit-pts.full    { color: var(--green); }
+    .crit-pts.partial { color: var(--orange); }
+    .crit-pts.zero    { color: var(--red); }
+    .crit-pts.na      { color: var(--muted); }
+    .crit-max { font-size: 0.65rem; color: var(--muted); }
+
+    .detail-note {
+      font-size: 0.77rem;
+      color: var(--muted);
+      padding: 10px 13px;
+      background: rgba(255,255,255,0.018);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      line-height: 1.6;
+    }
+    .detail-note strong { color: var(--text); }
+
+    /* ─── CRITERIA TABLE ─────────────────────────────────────────── */
+    .crit-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+    .crit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.83rem;
+    }
+    .crit-table thead th {
+      background: var(--surface2);
+      padding: 9px 13px;
+      text-align: left;
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+    .crit-tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background var(--transition); }
+    .crit-tr:last-child { border-bottom: none; }
+    .crit-tr:hover { background: rgba(255,255,255,0.02); }
+    .crit-tr td { padding: 10px 13px; vertical-align: middle; }
+    .ct-name-cell { min-width: 140px; }
+    .ct-main-name { font-weight: 600; color: var(--text); font-size: 0.85rem; }
+    .ct-long-name { font-size: 0.71rem; color: var(--muted); margin-top: 2px; }
+    .ct-seuil-cell { font-size: 0.74rem; color: var(--muted); min-width: 185px; line-height: 1.45; }
+    .ct-val-cell { font-weight: 700; color: var(--text); white-space: nowrap; text-align: right; font-size: 0.9rem; }
+    .ct-nd { color: var(--muted) !important; font-weight: 400 !important; font-style: italic; }
+    .ct-src-cell { white-space: nowrap; text-align: center; }
+    .ct-res-cell { text-align: right; white-space: nowrap; padding-right: 16px !important; }
+    .ct-icon { font-size: 0.9rem; }
+    .ct-pts { font-weight: 700; font-size: 0.82rem; margin-left: 5px; }
+    .ct-pts.full    { color: var(--green); }
+    .ct-pts.partial { color: var(--orange); }
+    .ct-pts.zero    { color: var(--red); }
+    .ct-pts.na      { color: var(--muted); }
+    .crit-total-tr td {
+      padding: 10px 13px;
+      background: rgba(255,255,255,0.025);
+      border-top: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ─── DETAIL EXTRAS ──────────────────────────────────────────── */
+    .detail-extra-row {
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding: 8px 12px;
+      background: rgba(255,255,255,0.018);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    /* ─── GRAHAM NUMBER BOX ──────────────────────────────────────── */
+    .graham-box {
+      background: var(--surface);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .gn-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .gn-title { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .gn-formula {
+      font-size: 0.79rem;
+      color: var(--muted);
+      font-style: italic;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 6px;
+    }
+    .gn-values {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 9px;
+      margin-bottom: 13px;
+    }
+    .gn-val {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .gn-val.gn-under { border-color: rgba(16,185,129,0.35); background: rgba(16,185,129,0.06); }
+    .gn-val.gn-over  { border-color: rgba(239,68,68,0.25);  background: rgba(239,68,68,0.05); }
+    .gn-lbl { font-size: 0.65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .gn-num { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+    .gn-val.gn-under .gn-num { color: var(--green); }
+    .gn-val.gn-over  .gn-num { color: var(--red); }
+    .gn-verdict {
+      font-size: 0.81rem;
+      padding: 10px 13px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .gn-under-v { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.22); color: #6ee7b7; }
+    .gn-over-v  { background: rgba(239,68,68,0.06);  border: 1px solid rgba(239,68,68,0.2);  color: #fca5a5; }
+    .gn-nd { font-size: 0.82rem; color: var(--muted); font-style: italic; padding: 4px 0; }
+    .gn-footnote { font-size: 0.7rem; color: var(--muted); font-style: italic; line-height: 1.5; }
+
+    /* ─── EMPTY STATE ────────────────────────────────────────────── */
+    .empty-row td {
+      padding: 40px 20px !important;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* ─── SKELETON ───────────────────────────────────────────────── */
+    .skel {
+      display: inline-block;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--surface2) 25%, rgba(255,255,255,0.055) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .sk-sm  { width: 48px;  height: 14px; }
+    .sk-md  { width: 70px;  height: 16px; }
+    .sk-bar { width: 64px;  height: 5px; border-radius: 100px; }
+    .sk-lg  { width: 90px;  height: 18px; }
+
+    /* ─── DISCLAIMER ─────────────────────────────────────────────── */
+    .disclaimer {
+      background: rgba(245,158,11,0.04);
+      border: 1px solid rgba(245,158,11,0.15);
+      border-radius: var(--radius-sm);
+      padding: 15px 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 44px;
+    }
+    .disclaimer-icon { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    .disclaimer-text { font-size: 0.81rem; color: var(--muted); line-height: 1.65; }
+    .disclaimer-text strong { color: var(--text); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 0;
+      text-align: center;
+    }
+    .page-footer p { color: var(--muted); font-size: 0.82rem; }
+    .page-footer a { color: var(--orange); }
+    .page-footer a:hover { color: var(--cyan); }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .footer-links a { font-size: 0.83rem; color: var(--muted); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hide-md { display: none !important; }
+    }
+    @media (max-width: 640px) {
+      .hide-sm { display: none !important; }
+      .criteria-grid { grid-template-columns: 1fr 1fr; }
+      .method-grid { grid-template-columns: 1fr; }
+      .filter-bar { gap: 10px; }
+      .page-header { padding: 96px 0 32px; }
+    }
+    @media (max-width: 480px) {
+      .criteria-grid { grid-template-columns: 1fr; }
+      .stocks-table thead th { font-size: 0.65rem; padding: 11px 10px; }
+      .stock-row td { padding: 12px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">₣</div>
+        <span>FinanceClé</span>
+      </a>
+      <div class="nav-links">
+        <a href="tableau-de-bord-macro.html" class="nav-pill">📊 Macro</a>
+        <a href="selection-actions.html" class="nav-pill active">📈 Actions</a>
+        <a href="index.html" class="back-btn">← Accueil</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <div class="page-badge">📈 Value Investing · Buffett &amp; Graham</div>
+      <h1>Sélection d'<span class="highlight-gold">Actions</span></h1>
+      <p>15 valeurs analysées selon les critères de Warren Buffett et Benjamin Graham.<br>Score calculé selon les critères fondamentaux de Warren Buffett et Benjamin Graham.</p>
+      <div class="page-header-stats">
+        <div class="header-stat">🏦 <strong>15 actions</strong> analysées</div>
+        <div class="header-stat">🌍 <strong>3 zones</strong> géographiques</div>
+        <div class="header-stat">📐 <strong>7 critères</strong> pondérés</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- METHODOLOGY BOX -->
+      <div class="method-box">
+        <div class="method-box-header" onclick="toggleMethod()">
+          <div class="method-title">📐 Méthodologie du score Buffett-Graham <span class="method-pts-total">— 100 points maximum</span></div>
+          <div class="method-toggle open" id="methodToggle">▼</div>
+        </div>
+        <div id="methodGrid">
+          <div class="method-grid">
+            <div class="method-item"><span class="method-pts-badge">15 pts</span><div class="method-desc"><strong>PER</strong> · &lt; 15 → 15 pts · 15–25 → 8 pts · &gt; 25 → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">15 pts</span><div class="method-desc"><strong>PBR</strong> · &lt; 1,5 → 15 pts · 1,5–3 → 8 pts · &gt; 3 → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">10 pts</span><div class="method-desc"><strong>Dividende</strong> · &gt; 3 % → 10 · 2–3 % → 7 · 1–2 % → 3 · 0 % → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">20 pts</span><div class="method-desc"><strong>ROE moy. 5 ans</strong> · &gt; 20 % → 20 · 15–20 % → 13 · 10–15 % → 7 · &lt; 10 % → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">15 pts</span><div class="method-desc"><strong>Dette / Capitaux propres</strong> · &lt; 0,3 → 15 · 0,3–0,5 → 8 · &gt; 0,5 → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">15 pts</span><div class="method-desc"><strong>Croissance BPA 5 ans</strong> · &gt; 10 %/an → 15 · 5–10 % → 8 · &lt; 5 % → 0 pt</div></div>
+            <div class="method-item"><span class="method-pts-badge">10 pts</span><div class="method-desc"><strong>Capitalisation</strong> · &gt; 50 Mds $ → 10 · 10–50 Mds $ → 6 · &lt; 10 Mds $ → 3 pts</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Zone</span>
+          <button class="filter-btn active" data-zone="all"    onclick="setFilter('all')">🌍 Toutes</button>
+          <button class="filter-btn"        data-zone="france" onclick="setFilter('france')">🇫🇷 France</button>
+          <button class="filter-btn"        data-zone="usa"    onclick="setFilter('usa')">🇺🇸 USA</button>
+          <button class="filter-btn"        data-zone="intl"   onclick="setFilter('intl')">🌐 International</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <span class="filter-label">Trier par</span>
+          <button class="sort-btn active" data-sort="score" onclick="setSort('score')">Score <span class="sort-arrow">▼</span></button>
+          <button class="sort-btn"        data-sort="per"   onclick="setSort('per')">PER <span class="sort-arrow">▲</span></button>
+          <button class="sort-btn"        data-sort="div"   onclick="setSort('div')">Dividende <span class="sort-arrow">▼</span></button>
+          <button class="sort-btn"        data-sort="mcap"  onclick="setSort('mcap')">Capitalisation <span class="sort-arrow">▼</span></button>
+        </div>
+      </div>
+
+      <!-- INFO BAR -->
+      <div class="refresh-bar">
+        <div class="refresh-info">
+          <span class="data-date-badge">📅 Données : avril 2026</span>
+          <div class="stat-pill" id="statAvg" style="display:none">Score moyen : <strong id="avgScoreVal">—</strong></div>
+          <div class="stat-pill" id="statBest" style="display:none">Meilleur : <strong id="bestStockVal">—</strong></div>
+        </div>
+      </div>
+
+      <!-- STOCKS TABLE -->
+      <div class="stocks-wrapper">
+        <table class="stocks-table">
+          <thead>
+            <tr>
+              <th class="th-center">#</th>
+              <th>Société</th>
+              <th class="hide-sm">Cours</th>
+              <th>Score</th>
+              <th class="th-right hide-sm">PER</th>
+              <th class="th-right hide-md">PBR</th>
+              <th class="th-right hide-sm">Div.</th>
+              <th class="th-right hide-md">Capitalisation</th>
+              <th class="hide-sm">Badges</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="stocksBody"></tbody>
+        </table>
+      </div>
+
+      <!-- DISCLAIMER -->
+      <div class="disclaimer">
+        <div class="disclaimer-icon">⚠️</div>
+        <div class="disclaimer-text">
+          <strong>Avertissement :</strong> Ces données sont fournies à titre éducatif uniquement et <strong>ne constituent pas un conseil en investissement</strong>.
+          Le score Buffett-Graham est un outil pédagogique simplifié ; il ne remplace pas une analyse fondamentale approfondie ni l'avis d'un conseiller financier.
+          Les données (cours, ratios, dividendes, capitalisations) sont des <strong>données statiques d'avril 2026</strong>, fournies à titre indicatif et mises à jour périodiquement.
+          <strong>Investir en bourse comporte un risque de perte en capital.</strong>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div class="container">
+      <div class="footer-links">
+        <a href="index.html">← Accueil FinanceClé</a>
+        <a href="tableau-de-bord-macro.html">📊 Tableau de bord Macro</a>
+        <a href="index.html#investissement">Investissement</a>
+        <a href="index.html#epargne">Épargne</a>
+        <a href="index.html#budget">Budget</a>
+      </div>
+      <p>© 2026 FinanceClé — Données à titre indicatif · <a href="index.html">Retour à l'accueil</a></p>
+    </div>
+  </footer>
+
+<script>
+'use strict';
+
+/* ─── FX RATES (approx. USD, for market-cap comparison) ─────────── */
+const FX_USD = { EUR: 1.08, USD: 1.0, CHF: 1.11, GBp: 0.01265, GBP: 1.265, KRW: 0.000725 };
+
+/* ─── STOCKS MASTER LIST ────────────────────────────────────────── */
+// ref.roe        = ROE moyen 5 ans (%)
+// ref.epsGrowth  = Croissance BPA moy. 5 ans (%/an)
+// ref.divYears   = Années consécutives de dividendes
+// ref.bankNote   = true si banque (D/E non significatif)
+const STOCKS = [
+  // ── USA ───────────────────────────────────────────────────────
+  {
+    ticker:'JNJ', name:'Johnson & Johnson', zone:'usa', flag:'🇺🇸', country:'États-Unis', sector:'Santé',
+    ref:{ roe:25, epsGrowth:6, divYears:62 },
+    data:{ price:234,   currency:'USD', per:14.2, pbr:5.1,  divYield:2.2, marketCap:562e9,  debtEquity:0.45, eps:16.48 }
+  },
+  {
+    ticker:'KO', name:'Coca-Cola', zone:'usa', flag:'🇺🇸', country:'États-Unis', sector:'Consommation',
+    ref:{ roe:38, epsGrowth:4, divYears:62 },
+    data:{ price:72,    currency:'USD', per:23.1, pbr:10.2, divYield:2.9, marketCap:310e9,  debtEquity:1.70, eps:3.12  }
+  },
+  {
+    ticker:'JPM', name:'JPMorgan Chase', zone:'usa', flag:'🇺🇸', country:'États-Unis', sector:'Banque',
+    ref:{ roe:17, epsGrowth:12, divYears:14, bankNote:true },
+    data:{ price:245,   currency:'USD', per:13.8, pbr:2.1,  divYield:2.0, marketCap:700e9,  debtEquity:1.20, eps:17.75 }
+  },
+  {
+    ticker:'CSCO', name:'Cisco Systems', zone:'usa', flag:'🇺🇸', country:'États-Unis', sector:'Technologie',
+    ref:{ roe:30, epsGrowth:5, divYears:12 },
+    data:{ price:58,    currency:'USD', per:27.2, pbr:6.4,  divYield:2.0, marketCap:230e9,  debtEquity:0.30, eps:2.13  }
+  },
+  {
+    ticker:'BRK-B', name:'Berkshire Hathaway', zone:'usa', flag:'🇺🇸', country:'États-Unis', sector:'Conglomérat',
+    ref:{ roe:15, epsGrowth:10, divYears:0 },
+    data:{ price:510,   currency:'USD', per:21.0, pbr:1.6,  divYield:0,   marketCap:1100e9, debtEquity:0.25, eps:24.29 }
+  },
+  {
+    ticker:'TSM', name:'Taiwan Semiconductor', zone:'intl', flag:'🇹🇼', country:'Taïwan', sector:'Semi-conducteurs',
+    ref:{ roe:25, epsGrowth:15, divYears:25 },
+    data:{ price:175,   currency:'USD', per:28.0, pbr:10.3, divYield:1.8, marketCap:900e9,  debtEquity:0.17, eps:6.25  }
+  },
+  {
+    ticker:'NVO', name:'Novo Nordisk', zone:'intl', flag:'🇩🇰', country:'Danemark', sector:'Santé',
+    ref:{ roe:80, epsGrowth:25, divYears:28 },
+    data:{ price:68,    currency:'USD', per:12.7, pbr:14.5, divYield:1.9, marketCap:300e9,  debtEquity:0.35, eps:5.35  }
+  },
+  // ── FRANCE ────────────────────────────────────────────────────
+  {
+    ticker:'TTE.PA', name:'TotalEnergies', zone:'france', flag:'🇫🇷', country:'France', sector:'Énergie',
+    ref:{ roe:14, epsGrowth:8, divYears:40 },
+    data:{ price:58,    currency:'EUR', per:8.5,  pbr:1.3,  divYield:5.2, marketCap:145e9,  debtEquity:0.40, eps:6.82  }
+  },
+  {
+    ticker:'SAN.PA', name:'Sanofi', zone:'france', flag:'🇫🇷', country:'France', sector:'Santé',
+    ref:{ roe:12, epsGrowth:5, divYears:30 },
+    data:{ price:98,    currency:'EUR', per:13.5, pbr:2.1,  divYield:3.8, marketCap:125e9,  debtEquity:0.28, eps:7.26  }
+  },
+  {
+    ticker:'BNP.PA', name:'BNP Paribas', zone:'france', flag:'🇫🇷', country:'France', sector:'Banque',
+    ref:{ roe:10, epsGrowth:9, divYears:20, bankNote:true },
+    data:{ price:72,    currency:'EUR', per:7.2,  pbr:0.8,  divYield:6.5, marketCap:92e9,   debtEquity:1.80, eps:10.00 }
+  },
+  {
+    ticker:'VIE.PA', name:'Veolia', zone:'france', flag:'🇫🇷', country:'France', sector:'Services publics',
+    ref:{ roe:8, epsGrowth:6, divYears:20 },
+    data:{ price:28,    currency:'EUR', per:16.5, pbr:2.8,  divYield:4.1, marketCap:20e9,   debtEquity:0.90, eps:1.70  }
+  },
+  // ── INTERNATIONAL ─────────────────────────────────────────────
+  {
+    ticker:'ALV.DE', name:'Allianz', zone:'intl', flag:'🇩🇪', country:'Allemagne', sector:'Assurance',
+    ref:{ roe:14, epsGrowth:8, divYears:15 },
+    data:{ price:320,   currency:'EUR', per:12.4, pbr:2.0,  divYield:4.2, marketCap:140e9,  debtEquity:0.35, eps:25.81 }
+  },
+  {
+    ticker:'NESN.SW', name:'Nestlé', zone:'intl', flag:'🇨🇭', country:'Suisse', sector:'Alimentation',
+    ref:{ roe:20, epsGrowth:5, divYears:27 },
+    data:{ price:78,    currency:'CHF', per:18.5, pbr:5.8,  divYield:3.5, marketCap:220e9,  mcapCurrency:'EUR', debtEquity:0.60, eps:4.22 }
+  },
+  {
+    ticker:'ULVR.L', name:'Unilever', zone:'intl', flag:'🇬🇧', country:'Royaume-Uni', sector:'Consommation',
+    ref:{ roe:35, epsGrowth:4, divYears:25 },
+    data:{ price:43,    currency:'GBP', per:17.8, pbr:5.5,  divYield:3.6, marketCap:115e9,  mcapCurrency:'EUR', debtEquity:0.75, eps:2.42 }
+  },
+  {
+    ticker:'005930.KS', name:'Samsung Electronics', zone:'intl', flag:'🇰🇷', country:'Corée du Sud', sector:'Technologie',
+    ref:{ roe:12, epsGrowth:7, divYears:20 },
+    data:{ price:55000, currency:'KRW', per:14.0, pbr:1.3,  divYield:2.8, marketCap:320e9,  mcapCurrency:'EUR', debtEquity:0.15, eps:3929 }
+  },
+];
+
+/* ─── STATE ──────────────────────────────────────────────────────── */
+let stockData      = {};   // ticker → { price, currency, per, pbr, divYield, marketCap, debtEquity, eps, loaded }
+let currentFilter  = 'all';
+let currentSort    = 'score';
+let expandedTicker = null;
+let methodOpen     = true;
+
+/* ─── INIT DATA — static April 2026 ──────────────────────────────── */
+function initData() {
+  STOCKS.forEach(s => {
+    stockData[s.ticker] = { ...s.data, stale: false, loaded: true };
+  });
+}
+
+/* ─── UTILS ──────────────────────────────────────────────────────── */
+function tidFor(ticker) {
+  // Safe ID fragment: replace non-alphanumeric with underscore
+  return ticker.replace(/[^a-zA-Z0-9]/g, '_');
+}
+
+function sym(currency) {
+  return ({ EUR:'€', USD:'$', CHF:'Fr.', GBp:'p', GBP:'£', KRW:'₩' })[currency] || currency || '';
+}
+
+function formatPrice(price, currency) {
+  if (price == null || isNaN(price)) return '—';
+  if (currency === 'KRW') return `${Math.round(price).toLocaleString('fr-FR')} ${sym(currency)}`;
+  if (currency === 'GBp') return `${Math.round(price)} p`;
+  if (currency === 'GBP') return `${price.toFixed(2).replace('.', ',')} £`;
+  if (currency === 'EUR' || currency === 'CHF') {
+    return `${price.toFixed(2).replace('.', ',')} ${sym(currency)}`;
+  }
+  // USD
+  if (price >= 1000) return `$${Math.round(price).toLocaleString('fr-FR')}`;
+  return `$${price.toFixed(2)}`;
+}
+
+function formatMCap(value, currency) {
+  if (!value || isNaN(value)) return '—';
+  if (currency === 'KRW') return `${(value / 1e12).toFixed(0)} T ₩`;
+  if (currency === 'GBp') return `${(value / 1e11).toFixed(0)} Mds £`;
+  const b = value / 1e9;
+  if (b >= 1000) return `${(b / 1000).toFixed(2)} Bn ${sym(currency)}`;
+  return `${Math.round(b)} Mds ${sym(currency)}`;
+}
+
+function mcapUSD(value, currency) {
+  if (!value || isNaN(value)) return 0;
+  return (value * (FX_USD[currency] || 1)) / 1e9; // billions USD
+}
+
+function fmtN(v, d = 2) {
+  if (v == null || isNaN(v)) return '—';
+  return v.toFixed(d).replace('.', ',');
+}
+
+function fmtP(v, d = 1) {
+  if (v == null || isNaN(v)) return '—';
+  return `${v.toFixed(d).replace('.', ',')} %`;
+}
+
+/* ─── SCORING ────────────────────────────────────────────────────── */
+function sPER(per) {
+  if (per == null || isNaN(per) || per <= 0) return { pts:0, max:15, label:'Données indisponibles', cls:'na' };
+  if (per < 15)  return { pts:15, max:15, label:`PER ${fmtN(per,1)} < 15 ✓`, cls:'full' };
+  if (per <= 25) return { pts:8,  max:15, label:`PER ${fmtN(per,1)} entre 15–25`, cls:'partial' };
+  return               { pts:0,  max:15, label:`PER ${fmtN(per,1)} > 25`, cls:'zero' };
+}
+function sPBR(pbr) {
+  if (pbr == null || isNaN(pbr) || pbr <= 0) return { pts:0, max:15, label:'Données indisponibles', cls:'na' };
+  if (pbr < 1.5) return { pts:15, max:15, label:`PBR ${fmtN(pbr,2)} < 1,5 ✓`, cls:'full' };
+  if (pbr <= 3)  return { pts:8,  max:15, label:`PBR ${fmtN(pbr,2)} entre 1,5–3`, cls:'partial' };
+  return               { pts:0,  max:15, label:`PBR ${fmtN(pbr,2)} > 3`, cls:'zero' };
+}
+function sDiv(div) {
+  if (div == null || isNaN(div)) return { pts:0, max:10, label:'Données indisponibles', cls:'na' };
+  if (div > 3)  return { pts:10, max:10, label:`${fmtP(div,2)} > 3 % ✓`, cls:'full' };
+  if (div >= 2) return { pts:7,  max:10, label:`${fmtP(div,2)} entre 2–3 %`, cls:'partial' };
+  if (div >= 1) return { pts:3,  max:10, label:`${fmtP(div,2)} entre 1–2 %`, cls:'partial' };
+  return             { pts:0,  max:10, label:`${fmtP(div,2)} (aucun ou < 1 %)`, cls:'zero' };
+}
+function sROE(roe) {
+  if (roe == null || isNaN(roe)) return { pts:0, max:20, label:'—', cls:'na' };
+  if (roe > 20)  return { pts:20, max:20, label:`${fmtP(roe,0)} > 20 % ✓`, cls:'full' };
+  if (roe >= 15) return { pts:13, max:20, label:`${fmtP(roe,0)} entre 15–20 %`, cls:'partial' };
+  if (roe >= 10) return { pts:7,  max:20, label:`${fmtP(roe,0)} entre 10–15 %`, cls:'partial' };
+  return               { pts:0,  max:20, label:`${fmtP(roe,0)} < 10 %`, cls:'zero' };
+}
+function sDebt(de, bankNote) {
+  if (de == null || isNaN(de) || de < 0) return { pts:0, max:15, label:'Données indisponibles', cls:'na' };
+  if (bankNote) return { pts:0, max:15, label:`D/E ${fmtN(de,2)} — ratio non représentatif pour les banques`, cls:'zero', warn:true };
+  if (de < 0.3)  return { pts:15, max:15, label:`D/E ${fmtN(de,2)} < 0,30 ✓`, cls:'full' };
+  if (de <= 0.5) return { pts:8,  max:15, label:`D/E ${fmtN(de,2)} entre 0,30–0,50`, cls:'partial' };
+  return               { pts:0,  max:15, label:`D/E ${fmtN(de,2)} > 0,50`, cls:'zero' };
+}
+function sEPS(eps) {
+  if (eps == null || isNaN(eps)) return { pts:0, max:15, label:'—', cls:'na' };
+  if (eps > 10) return { pts:15, max:15, label:`${fmtP(eps,0)}/an > 10 % ✓`, cls:'full' };
+  if (eps >= 5) return { pts:8,  max:15, label:`${fmtP(eps,0)}/an entre 5–10 %`, cls:'partial' };
+  return             { pts:0,  max:15, label:`${fmtP(eps,0)}/an < 5 %`, cls:'zero' };
+}
+function sMCap(mcUSD) {
+  if (!mcUSD || mcUSD <= 0) return { pts:0, max:10, label:'Données indisponibles', cls:'na' };
+  if (mcUSD > 50)  return { pts:10, max:10, label:`> 50 Mds $ ✓`, cls:'full' };
+  if (mcUSD >= 10) return { pts:6,  max:10, label:`10–50 Mds $`, cls:'partial' };
+  return                  { pts:3,  max:10, label:`< 10 Mds $`, cls:'zero' };
+}
+
+function calcScore(ticker) {
+  const s = STOCKS.find(x => x.ticker === ticker);
+  if (!s) return 0;
+  const d = stockData[ticker] || {};
+  const mc = mcapUSD(d.marketCap, d.mcapCurrency || d.currency);
+  return (
+    sPER(d.per).pts +
+    sPBR(d.pbr).pts +
+    sDiv(d.divYield).pts +
+    sROE(s.ref.roe).pts +
+    sDebt(d.debtEquity, s.ref.bankNote).pts +
+    sEPS(s.ref.epsGrowth).pts +
+    sMCap(mc).pts
+  );
+}
+
+function scoreClass(score) {
+  return score >= 70 ? 'sc-green' : score >= 50 ? 'sc-orange' : 'sc-red';
+}
+
+function getBadges(ticker) {
+  const d = stockData[ticker] || {};
+  const sc = calcScore(ticker);
+  const out = [];
+  if (sc > 75) out.push('buffett');
+  if (d.per != null && d.per > 0 && d.per < 15 && d.pbr != null && d.pbr > 0 && d.pbr < 1.5) out.push('graham');
+  return out;
+}
+
+/* ─── RENDERING ──────────────────────────────────────────────────── */
+function getFilteredSorted() {
+  let list = STOCKS.filter(s => currentFilter === 'all' || s.zone === currentFilter);
+
+  list.sort((a, b) => {
+    const dA = stockData[a.ticker] || {};
+    const dB = stockData[b.ticker] || {};
+    if (currentSort === 'score') return calcScore(b.ticker) - calcScore(a.ticker);
+    if (currentSort === 'per') {
+      const pA = dA.per ?? Infinity, pB = dB.per ?? Infinity;
+      return pA - pB;
+    }
+    if (currentSort === 'div') {
+      const dv1 = dA.divYield ?? -1, dv2 = dB.divYield ?? -1;
+      return dv2 - dv1;
+    }
+    if (currentSort === 'mcap') {
+      return mcapUSD(dB.marketCap, dB.mcapCurrency || dB.currency) - mcapUSD(dA.marketCap, dA.mcapCurrency || dA.currency);
+    }
+    return 0;
+  });
+  return list;
+}
+
+function renderTable() {
+  const list  = getFilteredSorted();
+  const tbody = document.getElementById('stocksBody');
+  tbody.innerHTML = '';
+
+  if (list.length === 0) {
+    const tr = document.createElement('tr');
+    tr.className = 'empty-row';
+    tr.innerHTML = '<td colspan="10">Aucune action ne correspond à ce filtre.</td>';
+    tbody.appendChild(tr);
+    return;
+  }
+
+  list.forEach((s, idx) => {
+    const d      = stockData[s.ticker] || {};
+    const loaded = !!d.loaded;
+    const sc     = loaded ? calcScore(s.ticker) : null;
+    const scCls  = sc != null ? scoreClass(sc) : '';
+    const badges = loaded ? getBadges(s.ticker) : [];
+    const isOpen = expandedTicker === s.ticker;
+    const tid    = tidFor(s.ticker);
+
+    // ── Main row ──────────────────────────────────────────────
+    const tr = document.createElement('tr');
+    tr.className = 'stock-row' + (isOpen ? ' expanded' : '');
+    tr.setAttribute('data-ticker', s.ticker);
+    tr.onclick   = () => toggleExpand(s.ticker);
+
+    const priceHTML = loaded
+      ? `<div class="price-main">${formatPrice(d.price, d.currency)}</div>
+         <div class="price-cur">${d.currency || ''}${d.stale ? ' ⚠️' : ''}</div>`
+      : `<span class="skel sk-md"></span>`;
+
+    const scoreHTML = loaded
+      ? `<div class="score-wrap">
+           <div class="score-track"><div class="score-fill ${scCls}" style="width:${sc}%"></div></div>
+           <span class="score-num ${scCls}">${sc} %</span>
+         </div>`
+      : `<div class="score-wrap"><span class="skel sk-bar"></span><span class="skel sk-sm" style="margin-left:8px"></span></div>`;
+
+    const perHTML  = loaded ? (d.per  != null ? fmtN(d.per,  1) : '—') : `<span class="skel sk-sm"></span>`;
+    const pbrHTML  = loaded ? (d.pbr  != null ? fmtN(d.pbr,  2) : '—') : `<span class="skel sk-sm"></span>`;
+    const divHTML  = loaded ? (d.divYield != null ? fmtP(d.divYield, 2) : '—') : `<span class="skel sk-sm"></span>`;
+    const mcHTML   = loaded ? formatMCap(d.marketCap, d.mcapCurrency || d.currency) : `<span class="skel sk-lg"></span>`;
+    const naP  = loaded && d.per == null  ? ' na-val' : '';
+    const naPbr = loaded && d.pbr == null ? ' na-val' : '';
+    const naDiv = loaded && d.divYield == null ? ' na-val' : '';
+    const naMC  = loaded && !d.marketCap ? ' na-val' : '';
+
+    const badgesHTML = badges.map(b =>
+      b === 'buffett'
+        ? `<span class="badge-buffett">Buffett ❤️</span>`
+        : `<span class="badge-graham">Graham ✓</span>`
+    ).join('');
+
+    tr.innerHTML = `
+      <td class="rank-cell">${idx + 1}</td>
+      <td>
+        <div class="company-cell">
+          <span class="co-flag">${s.flag}</span>
+          <div>
+            <div class="co-name">${s.name}</div>
+            <div class="co-sub">${s.ticker} · ${s.country}</div>
+          </div>
+        </div>
+      </td>
+      <td class="hide-sm">${priceHTML}</td>
+      <td class="score-cell">${scoreHTML}</td>
+      <td class="metric-td hide-sm${naP}">${perHTML}</td>
+      <td class="metric-td hide-md${naPbr}">${pbrHTML}</td>
+      <td class="metric-td hide-sm${naDiv}">${divHTML}</td>
+      <td class="metric-td hide-md${naMC}">${mcHTML}</td>
+      <td class="badges-td hide-sm">${badgesHTML}</td>
+      <td class="expand-td">
+        <button class="expand-btn ${isOpen ? 'open' : ''}"
+                onclick="event.stopPropagation();toggleExpand('${s.ticker}')">▼</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+
+    // ── Detail row ─────────────────────────────────────────────
+    const detailTr = document.createElement('tr');
+    detailTr.className  = 'detail-row' + (isOpen ? ' open' : '');
+    detailTr.id         = `detail_${tid}`;
+    const detailTd = document.createElement('td');
+    detailTd.colSpan = 10;
+    if (isOpen) detailTd.innerHTML = buildDetailPanel(s);
+    detailTr.appendChild(detailTd);
+    tbody.appendChild(detailTr);
+  });
+}
+
+function buildDetailPanel(s) {
+  const d = stockData[s.ticker] || {};
+  if (!d.loaded) return `<div class="detail-inner" style="color:var(--muted);font-size:0.85rem;padding:20px">Chargement…</div>`;
+
+  const mc = mcapUSD(d.marketCap, d.mcapCurrency || d.currency);
+
+  // ── Criteria definitions ─────────────────────────────────────
+  const criteria = [
+    {
+      name: 'PER', longName: 'Ratio cours / bénéfice (Price-to-Earnings)',
+      seuil: '< 15 → 15 pts · 15–25 → 8 pts · > 25 → 0 pt',
+      value: d.per != null ? `× ${fmtN(d.per, 1)}` : 'N/D',
+      source: 'static',
+      ...sPER(d.per)
+    },
+    {
+      name: 'PBR', longName: 'Ratio cours / valeur comptable (Price-to-Book)',
+      seuil: '< 1,5 → 15 pts · 1,5–3 → 8 pts · > 3 → 0 pt',
+      value: d.pbr != null ? `× ${fmtN(d.pbr, 2)}` : 'N/D',
+      source: 'static',
+      ...sPBR(d.pbr)
+    },
+    {
+      name: 'Dividende', longName: 'Rendement annuel du dividende',
+      seuil: '> 3 % → 10 pts · 2–3 % → 7 pts · 1–2 % → 3 pts · < 1 % → 0 pt',
+      value: d.divYield != null ? fmtP(d.divYield, 2) : 'N/D',
+      source: 'static',
+      ...sDiv(d.divYield)
+    },
+    {
+      name: 'ROE', longName: 'Rentabilité des capitaux propres (moy. 5 ans)',
+      seuil: '> 20 % → 20 pts · 15–20 % → 13 pts · 10–15 % → 7 pts · < 10 % → 0 pt',
+      value: fmtP(s.ref.roe, 0),
+      source: 'ref',
+      ...sROE(s.ref.roe)
+    },
+    {
+      name: 'Dette / CP', longName: 'Ratio dette nette / capitaux propres',
+      seuil: '< 0,30 → 15 pts · 0,30–0,50 → 8 pts · > 0,50 → 0 pt',
+      value: d.debtEquity != null ? fmtN(d.debtEquity, 2) : 'N/D',
+      source: 'static',
+      ...sDebt(d.debtEquity, s.ref.bankNote)
+    },
+    {
+      name: 'Croiss. BPA', longName: 'Croissance du bénéfice par action (moy. 5 ans)',
+      seuil: '> 10 %/an → 15 pts · 5–10 % → 8 pts · < 5 % → 0 pt',
+      value: fmtP(s.ref.epsGrowth, 0) + '/an',
+      source: 'ref',
+      ...sEPS(s.ref.epsGrowth)
+    },
+    {
+      name: 'Capitalisation', longName: 'Capitalisation boursière',
+      seuil: '> 50 Mds $ → 10 pts · 10–50 Mds $ → 6 pts · < 10 Mds $ → 3 pts',
+      value: formatMCap(d.marketCap, d.mcapCurrency || d.currency),
+      source: 'static',
+      ...sMCap(mc)
+    },
+  ];
+
+  const total = criteria.reduce((a, c) => a + c.pts, 0);
+  const tCls  = scoreClass(total);
+
+  // ── Criteria table rows ──────────────────────────────────────
+  const rowsHTML = criteria.map(c => {
+    const isNd   = c.value === 'N/D';
+    const icon   = c.cls === 'full'    ? '✅'
+                 : c.cls === 'partial' ? '🟡'
+                 : c.cls === 'zero'    ? '❌'
+                 : '➖';
+    const srcLbl = c.source === 'ref'
+      ? `<span class="src-badge src-ref">◆ Référence</span>`
+      : `<span class="src-badge src-live">📅 Avr. 2026</span>`;
+    return `
+      <tr class="crit-tr">
+        <td class="ct-name-cell">
+          <div class="ct-main-name">${c.name}</div>
+          <div class="ct-long-name">${c.longName}</div>
+        </td>
+        <td class="ct-seuil-cell">${c.seuil}</td>
+        <td class="ct-val-cell ${isNd ? 'ct-nd' : ''}">${c.value}${c.warn ? ' <span style="color:var(--orange);font-size:0.7rem">⚠</span>' : ''}</td>
+        <td class="ct-src-cell">${srcLbl}</td>
+        <td class="ct-res-cell">
+          <span class="ct-icon">${icon}</span>
+          <span class="ct-pts ${c.cls}">${c.pts}/${c.max}</span>
+        </td>
+      </tr>`;
+  }).join('');
+
+  // ── Graham Number ────────────────────────────────────────────
+  // Formula : √(22,5 × BPA × VCPA)
+  // BPA  = earningsPerShare fourni dans data → sinon estimé via Prix / PER
+  // VCPA = Prix / PBR  (valeur comptable par action estimée)
+  let grahamHTML = '';
+  const epsActual   = (d.eps  != null && d.eps  > 0) ? d.eps  : null;
+  const epsEstim    = (d.per  != null && d.per  > 0 && d.price != null) ? d.price / d.per : null;
+  const bpaForGraham = epsActual ?? epsEstim;
+  const bvpsForGraham = (d.pbr != null && d.pbr > 0 && d.price != null) ? d.price / d.pbr : null;
+  const bpaLabel = epsActual != null ? 'BPA (avr. 2026)' : 'BPA estimé (Prix/PER)';
+
+  if (bpaForGraham != null && bvpsForGraham != null) {
+    const product = 22.5 * bpaForGraham * bvpsForGraham;
+    if (product > 0) {
+      const gn      = Math.sqrt(product);
+      const ratio   = d.price / gn;
+      const diff    = Math.abs(((ratio - 1) * 100)).toFixed(1);
+      const isUnder = ratio < 1;
+      grahamHTML = `
+        <div class="graham-box">
+          <div class="gn-header">
+            <span class="gn-title">📐 Nombre de Graham</span>
+            <span class="gn-formula">= √(22,5 × BPA × VCPA)</span>
+          </div>
+          <div class="gn-values">
+            <div class="gn-val">
+              <div class="gn-lbl">${bpaLabel}</div>
+              <div class="gn-num">${formatPrice(bpaForGraham, d.currency)}</div>
+            </div>
+            <div class="gn-val">
+              <div class="gn-lbl">VCPA estimée (Prix/PBR)</div>
+              <div class="gn-num">${formatPrice(bvpsForGraham, d.currency)}</div>
+            </div>
+            <div class="gn-val ${isUnder ? 'gn-under' : 'gn-over'}">
+              <div class="gn-lbl">Nombre de Graham</div>
+              <div class="gn-num">${formatPrice(gn, d.currency)}</div>
+            </div>
+            <div class="gn-val">
+              <div class="gn-lbl">Cours actuel</div>
+              <div class="gn-num">${formatPrice(d.price, d.currency)}</div>
+            </div>
+          </div>
+          <div class="gn-verdict ${isUnder ? 'gn-under-v' : 'gn-over-v'}">
+            ${isUnder
+              ? `✅ <strong>Potentiellement sous-évaluée</strong> : le cours (${formatPrice(d.price, d.currency)}) est <strong>${diff} % en dessous</strong> du nombre de Graham (${formatPrice(gn, d.currency)}). Graham considérerait cette marge de sécurité favorable.`
+              : `❌ <strong>Potentiellement surévaluée</strong> : le cours (${formatPrice(d.price, d.currency)}) est <strong>${diff} % au-dessus</strong> du nombre de Graham (${formatPrice(gn, d.currency)}). Pas de marge de sécurité selon ce critère.`
+            }
+          </div>
+          <div class="gn-footnote">BPA : valeur fournie dans les données d'avril 2026, sinon estimée via Prix ÷ PER. VCPA estimée via Prix ÷ PBR. Le nombre de Graham suppose un BPA et une VCPA positifs — il peut être distordu pour les banques, les sociétés à fort rachat d'actions ou à book value négatif.</div>
+        </div>`;
+    }
+  } else {
+    grahamHTML = `
+      <div class="graham-box">
+        <div class="gn-header">
+          <span class="gn-title">📐 Nombre de Graham</span>
+          <span class="gn-formula">= √(22,5 × BPA × VCPA)</span>
+        </div>
+        <div class="gn-nd">Calcul indisponible — BPA ou PBR non disponibles pour ${s.name}. Le nombre de Graham nécessite des données positives pour les deux variables.</div>
+      </div>`;
+  }
+
+  // ── Dividend note ─────────────────────────────────────────────
+  const divNote = s.ref.divYears > 0
+    ? `📅 <strong>${s.ref.divYears} ans</strong> de dividendes consécutifs`
+    : `📅 <strong>Aucun dividende</strong> versé`;
+
+  return `
+    <div class="detail-inner">
+      <div class="detail-header">
+        <div class="detail-company-title">
+          ${s.flag} ${s.name}
+          <span class="detail-sector">${s.sector}</span>
+        </div>
+        <div class="detail-total">
+          Score B&amp;G :
+          <span class="score-num ${tCls}" style="font-size:1.15rem;margin-left:5px">${total} / 100</span>
+        </div>
+      </div>
+
+      <div class="crit-table-wrap">
+        <table class="crit-table">
+          <thead>
+            <tr>
+              <th class="ct-name-cell">Critère</th>
+              <th>Seuil Buffett / Graham</th>
+              <th style="text-align:right">Valeur</th>
+              <th style="text-align:center">Source</th>
+              <th style="text-align:right;padding-right:16px">Points</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHTML}</tbody>
+          <tfoot>
+            <tr class="crit-total-tr">
+              <td colspan="4" style="text-align:right">Score total</td>
+              <td style="text-align:right;padding-right:16px">
+                <span class="score-num ${tCls}" style="font-size:1rem">${total} / 100</span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="detail-extra-row">
+        ${divNote} &nbsp;·&nbsp; 🏦 ${s.sector} &nbsp;·&nbsp; 🌍 ${s.country}
+      </div>
+
+      ${grahamHTML}
+
+      <div class="detail-note">
+        <strong>📅 Données statiques (avril 2026)</strong> : cours, PER, PBR, dividende, BPA, capitalisation, dette/capitaux propres — valeurs collectées manuellement et mises à jour périodiquement.
+        &nbsp;|&nbsp; <strong>◆ Données de référence</strong> : ROE moyen 5 ans et croissance BPA 5 ans — moyennes historiques.
+      </div>
+    </div>`;
+}
+
+function updateStats() {
+  const ready = STOCKS.filter(s => stockData[s.ticker]?.loaded);
+  if (!ready.length) return;
+  const scores = ready.map(s => calcScore(s.ticker));
+  const avg    = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+  let bestSc = -1, bestName = '';
+  ready.forEach(s => {
+    const sc = calcScore(s.ticker);
+    if (sc > bestSc) { bestSc = sc; bestName = s.name; }
+  });
+  document.getElementById('avgScoreVal').textContent  = `${avg} %`;
+  document.getElementById('bestStockVal').textContent = `${bestName} (${bestSc} %)`;
+  document.getElementById('statAvg').style.display   = 'inline-flex';
+  document.getElementById('statBest').style.display  = 'inline-flex';
+}
+
+/* ─── UI HANDLERS ────────────────────────────────────────────────── */
+function toggleExpand(ticker) {
+  expandedTicker = expandedTicker === ticker ? null : ticker;
+  renderTable();
+  if (expandedTicker) {
+    setTimeout(() => {
+      const el = document.getElementById(`detail_${tidFor(ticker)}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 40);
+  }
+}
+
+function setFilter(zone) {
+  currentFilter  = zone;
+  expandedTicker = null;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.zone === zone));
+  renderTable();
+}
+
+function setSort(key) {
+  currentSort = key;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.toggle('active', b.dataset.sort === key));
+  renderTable();
+}
+
+function toggleMethod() {
+  methodOpen = !methodOpen;
+  document.getElementById('methodGrid').style.display   = methodOpen ? '' : 'none';
+  document.getElementById('methodToggle').className = 'method-toggle' + (methodOpen ? ' open' : '');
+}
+
+/* ─── INIT ───────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initData();
+  renderTable();
+  updateStats();
+});
+</script>
+</body>
+</html>

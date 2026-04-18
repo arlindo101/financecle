@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tableau de Bord Macro — FinanceClé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ─── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #6366f1;
+      --purple-dark: #4f46e5;
+      --cyan: #06b6d4;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --bg: #0f0f1a;
+      --bg2: #141428;
+      --surface: #1a1a2e;
+      --surface2: #22223a;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 0;
+      background: rgba(15,15,26,0.92);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: #fff;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 800;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+    .back-btn:hover { background: var(--surface); color: #fff; transform: translateX(-2px); }
+
+    /* ─── PAGE HEADER ────────────────────────────────────────────── */
+    .page-header {
+      padding: 110px 0 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top: -100px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .page-badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.2);
+      color: var(--purple);
+      border: 1px solid rgba(99,102,241,0.3);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .highlight {
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .page-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto 28px;
+    }
+
+    /* ─── REFRESH BAR ────────────────────────────────────────────── */
+    .refresh-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .refresh-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .refresh-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--purple), var(--cyan));
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all var(--transition);
+      box-shadow: 0 4px 16px rgba(99,102,241,0.3);
+    }
+    .btn-refresh:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.4); }
+    .btn-refresh:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn-refresh .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── SECTION LABELS ─────────────────────────────────────────── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-label-tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .tag-purple { background: rgba(99,102,241,0.15); color: var(--purple); border: 1px solid rgba(99,102,241,0.25); }
+    .tag-cyan { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.25); }
+    .tag-green { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
+    .section-label h2 { font-size: 1.3rem; font-weight: 700; color: #fff; }
+
+    /* ─── MACRO INDICATORS GRID ──────────────────────────────────── */
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    .indicator-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .indicator-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .indicator-card.favorable::before { background: var(--green); }
+    .indicator-card.neutre::before { background: var(--orange); }
+    .indicator-card.defavorable::before { background: var(--red); }
+    .indicator-card:hover { transform: translateY(-3px); }
+    .indicator-card.favorable:hover { border-color: rgba(16,185,129,0.35); box-shadow: 0 8px 28px rgba(16,185,129,0.12); }
+    .indicator-card.neutre:hover { border-color: rgba(245,158,11,0.35); box-shadow: 0 8px 28px rgba(245,158,11,0.12); }
+    .indicator-card.defavorable:hover { border-color: rgba(239,68,68,0.35); box-shadow: 0 8px 28px rgba(239,68,68,0.12); }
+
+    .ind-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .ind-name {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      max-width: 160px;
+    }
+    .ind-status-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .badge-favorable { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
+    .badge-neutre { background: rgba(245,158,11,0.15); color: var(--orange); border: 1px solid rgba(245,158,11,0.25); }
+    .badge-defavorable { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+    .ind-value-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .ind-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .ind-unit {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 500;
+      padding-bottom: 3px;
+    }
+    .ind-trend {
+      margin-left: auto;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .trend-up { color: var(--red); }
+    .trend-down { color: var(--green); }
+    .trend-stable { color: var(--orange); }
+    .trend-up-good { color: var(--green); }
+    .trend-down-bad { color: var(--red); }
+
+    .ind-description {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ─── CYCLE PHASE ────────────────────────────────────────────── */
+    .cycle-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 28px;
+      align-items: center;
+      transition: border-color var(--transition);
+    }
+    .cycle-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+    .phase-expansion .cycle-icon { background: rgba(16,185,129,0.15); border: 2px solid rgba(16,185,129,0.3); }
+    .phase-surchauffe .cycle-icon { background: rgba(239,68,68,0.15); border: 2px solid rgba(239,68,68,0.3); }
+    .phase-recession .cycle-icon { background: rgba(99,102,241,0.15); border: 2px solid rgba(99,102,241,0.3); }
+    .phase-reprise .cycle-icon { background: rgba(6,182,212,0.15); border: 2px solid rgba(6,182,212,0.3); }
+
+    .cycle-info h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .phase-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10px;
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 100px;
+    }
+    .phase-expansion .phase-label { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+    .phase-surchauffe .phase-label { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    .phase-recession .phase-label { background: rgba(99,102,241,0.15); color: var(--purple); border: 1px solid rgba(99,102,241,0.3); }
+    .phase-reprise .phase-label { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3); }
+
+    .cycle-info p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; max-width: 520px; }
+
+    .cycle-signals { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; min-width: 180px; }
+    .signal-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .signal-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Cycle wheel */
+    .cycle-wheel {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+    .cycle-phases-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .mini-phase {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      opacity: 0.45;
+      transition: all var(--transition);
+    }
+    .mini-phase.active { opacity: 1; transform: translateY(-3px); }
+    .mini-phase-expansion { border-color: rgba(16,185,129,0.5) !important; }
+    .mini-phase-surchauffe { border-color: rgba(239,68,68,0.5) !important; }
+    .mini-phase-recession { border-color: rgba(99,102,241,0.5) !important; }
+    .mini-phase-reprise { border-color: rgba(6,182,212,0.5) !important; }
+    .mini-phase-icon { font-size: 1.4rem; margin-bottom: 6px; }
+    .mini-phase-name { font-size: 0.8rem; font-weight: 700; color: #fff; }
+    .mini-phase-desc { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    /* ─── PORTFOLIO ALLOCATION ───────────────────────────────────── */
+    .allocation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 36px;
+    }
+    .donut-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .donut-wrapper {
+      position: relative;
+      width: 220px; height: 220px;
+    }
+    .donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+    .donut-center-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+    .donut-center-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .donut-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      width: 100%;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .legend-color {
+      width: 10px; height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .allocation-table { display: flex; flex-direction: column; gap: 0; }
+    .alloc-header {
+      display: grid;
+      grid-template-columns: 1.6fr 0.7fr 1.5fr 1fr;
+      gap: 12px;
+      padding: 10px 16px;
+      background: var(--surface2);
+      border-radius: 8px 8px 0 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .alloc-row {
+      display: grid;
+      grid-template-columns: 1.6fr 0.7fr 1.5fr 1fr;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+      font-size: 0.85rem;
+      transition: background var(--transition);
+    }
+    .alloc-row:last-child { border-bottom: none; }
+    .alloc-row:hover { background: rgba(255,255,255,0.02); }
+    .alloc-row.sub-row { padding-left: 30px; opacity: 0.75; }
+    .alloc-row.sub-row:hover { opacity: 1; }
+    .asset-name { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #fff; }
+    .asset-icon { font-size: 1rem; }
+    .asset-pct {
+      font-weight: 700;
+      color: #fff;
+    }
+    .alloc-bar-track {
+      width: 100%;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .alloc-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      transition: width 0.8s ease;
+    }
+    .alloc-comment { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .page-footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 60px;
+      text-align: center;
+    }
+    .page-footer p { color: var(--muted); font-size: 0.82rem; }
+    .page-footer a { color: var(--purple); }
+    .page-footer a:hover { color: var(--cyan); }
+
+    /* ─── LOADING SKELETON ───────────────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+    /* ─── DISCLAIMER ─────────────────────────────────────────────── */
+    .disclaimer {
+      background: rgba(245,158,11,0.06);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .disclaimer span:first-child { font-size: 1rem; flex-shrink: 0; }
+
+    /* ─── SOURCE BADGES ─────────────────────────────────────────── */
+    .ind-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .source-bce           { background: rgba(6,182,212,0.12);   color: #06b6d4; border: 1px solid rgba(6,182,212,0.25); }
+    .source-eurostat      { background: rgba(59,130,246,0.12);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+    .source-yahoo         { background: rgba(245,158,11,0.12);  color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+    .source-banquemondiale{ background: rgba(139,92,246,0.12);  color: #a78bfa; border: 1px solid rgba(139,92,246,0.25); }
+    .source-indicatif     { background: rgba(148,163,184,0.1);  color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+
+    .stale-warn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #f59e0b;
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      padding: 2px 8px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .pmi-note {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(148,163,184,0.07);
+      border: 1px solid rgba(148,163,184,0.15);
+      border-radius: 6px;
+      padding: 6px 10px;
+      line-height: 1.4;
+    }
+    .period-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ─── SÉLECTEUR DE PROFIL ───────────────────────────────────── */
+    .profile-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .profile-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .profile-card:hover { transform: translateY(-2px); }
+    .profile-card.active { transform: translateY(-2px); }
+
+    .profile-prudent.active   { border-color: var(--green);  box-shadow: 0 6px 24px rgba(16,185,129,0.18); }
+    .profile-equilibre.active { border-color: var(--blue);   box-shadow: 0 6px 24px rgba(59,130,246,0.18); }
+    .profile-dynamique.active { border-color: var(--purple); box-shadow: 0 6px 24px rgba(99,102,241,0.2); }
+    .profile-prudent:hover   { border-color: rgba(16,185,129,0.4); }
+    .profile-equilibre:hover { border-color: rgba(59,130,246,0.4); }
+    .profile-dynamique:hover { border-color: rgba(99,102,241,0.4); }
+
+    .profile-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .profile-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .profile-prudent   .profile-icon-wrap { background: rgba(16,185,129,0.12); }
+    .profile-equilibre .profile-icon-wrap { background: rgba(59,130,246,0.12); }
+    .profile-dynamique .profile-icon-wrap { background: rgba(99,102,241,0.12); }
+
+    .profile-check {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: transparent;
+      transition: all var(--transition);
+      flex-shrink: 0;
+    }
+    .profile-prudent.active   .profile-check { background: var(--green);  border-color: var(--green);  color: #fff; }
+    .profile-equilibre.active .profile-check { background: var(--blue);   border-color: var(--blue);   color: #fff; }
+    .profile-dynamique.active .profile-check { background: var(--purple); border-color: var(--purple); color: #fff; }
+
+    .profile-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 5px;
+    }
+    .profile-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .profile-horizon {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-top: 8px;
+    }
+    .profile-prudent   .profile-horizon { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+    .profile-equilibre .profile-horizon { background: rgba(59,130,246,0.1); color: var(--blue);  border: 1px solid rgba(59,130,246,0.2); }
+    .profile-dynamique .profile-horizon { background: rgba(99,102,241,0.1); color: var(--purple);border: 1px solid rgba(99,102,241,0.2); }
+
+    /* ─── BARRE DE RISQUE ────────────────────────────────────────── */
+    .risk-score-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .risk-score-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .risk-bar-wrap { flex: 1; min-width: 180px; position: relative; }
+    .risk-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--surface2);
+      border-radius: 100px;
+      overflow: visible;
+      position: relative;
+    }
+    .risk-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+    .risk-bar-thumb {
+      position: absolute;
+      right: -7px; top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: border-color 0.7s;
+    }
+    .risk-bar-ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      padding: 0 2px;
+    }
+    .risk-bar-ticks span {
+      font-size: 0.62rem;
+      color: var(--muted);
+      width: 10%;
+      text-align: center;
+    }
+    .risk-score-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: 48px;
+      text-align: right;
+      transition: color 0.7s;
+    }
+
+    /* ─── MESSAGE CONTEXTUEL ─────────────────────────────────────── */
+    .context-message {
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--text);
+      border: 1px solid;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: all var(--transition);
+    }
+    .context-message-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .context-message strong { color: #fff; display: block; margin-bottom: 4px; font-size: 0.9rem; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .indicators-grid { grid-template-columns: repeat(2, 1fr); }
+      .cycle-card { grid-template-columns: auto 1fr; }
+      .cycle-signals { display: none; }
+    }
+    @media (max-width: 768px) {
+      .indicators-grid { grid-template-columns: 1fr; }
+      .cycle-card { grid-template-columns: 1fr; text-align: center; }
+      .cycle-icon { margin: 0 auto; }
+      .cycle-phases-row { grid-template-columns: repeat(2, 1fr); }
+      .allocation-grid { grid-template-columns: 1fr; }
+      .alloc-header, .alloc-row { grid-template-columns: 1.6fr 0.6fr 1fr; }
+      .alloc-header > *:last-child, .alloc-row > *:last-child { display: none; }
+      .refresh-bar { flex-direction: column; align-items: flex-start; }
+      .profile-selector { grid-template-columns: 1fr; }
+      .risk-score-block { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .risk-bar-wrap { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .cycle-phases-row { grid-template-columns: 1fr 1fr; }
+      .donut-legend { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">₣</span>
+        <span>FinanceClé</span>
+      </a>
+      <a href="index.html" class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Retour à l'accueil
+      </a>
+    </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <span class="page-badge">Analyse Macro</span>
+      <h1>Tableau de Bord <span class="highlight">Macroéconomique</span></h1>
+      <p>Suivez les grands indicateurs de la zone euro, identifiez la phase du cycle économique et optimisez votre allocation de portefeuille en conséquence.</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+
+      <!-- DISCLAIMER -->
+      <div class="disclaimer">
+        <span>⚠️</span>
+        <span>Ces données sont fournies à titre indicatif et pédagogique uniquement. Elles ne constituent pas un conseil en investissement. Certaines valeurs sont simulées pour les indicateurs sans API publique gratuite disponible. Les décisions d'investissement relèvent de votre responsabilité.</span>
+      </div>
+
+      <!-- REFRESH BAR -->
+      <div class="refresh-bar">
+        <div class="refresh-info">
+          <span class="refresh-dot"></span>
+          <span>Dernière actualisation : <strong id="lastUpdate">—</strong></span>
+        </div>
+        <button class="btn-refresh" id="refreshBtn" onclick="refreshData()">
+          <svg id="refreshIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Actualiser les données
+        </button>
+      </div>
+
+      <!-- ─── SECTION 1 : INDICATEURS MACRO ─────────────────────── -->
+      <div class="section-label">
+        <span class="section-label-tag tag-purple">01</span>
+        <h2>Indicateurs Macroéconomiques</h2>
+      </div>
+
+      <div class="indicators-grid" id="indicatorsGrid">
+        <!-- Rempli par JS -->
+      </div>
+
+      <!-- ─── SECTION 2 : PHASE DU CYCLE ───────────────────────── -->
+      <div class="section-label">
+        <span class="section-label-tag tag-cyan">02</span>
+        <h2>Phase du Cycle Économique</h2>
+      </div>
+
+      <div class="cycle-phases-row" id="cyclePhasesMini">
+        <!-- Rempli par JS -->
+      </div>
+
+      <div id="cycleCard">
+        <!-- Rempli par JS -->
+      </div>
+
+      <!-- ─── SECTION 3 : ALLOCATION ────────────────────────────── -->
+      <div class="section-label">
+        <span class="section-label-tag tag-green">03</span>
+        <h2>Allocation de Portefeuille Recommandée</h2>
+      </div>
+
+      <!-- Sélecteur de profil -->
+      <div class="profile-selector" id="profileSelector">
+        <div class="profile-card profile-prudent active" data-profile="prudent" onclick="setProfile('prudent')">
+          <div class="profile-top">
+            <div class="profile-icon-wrap">🛡️</div>
+            <div class="profile-check">✓</div>
+          </div>
+          <div class="profile-name">Prudent</div>
+          <div class="profile-desc">Préservation du capital en priorité. Faible volatilité, sécurité maximale.</div>
+          <span class="profile-horizon">Horizon &lt; 5 ans</span>
+        </div>
+        <div class="profile-card profile-equilibre" data-profile="equilibre" onclick="setProfile('equilibre')">
+          <div class="profile-top">
+            <div class="profile-icon-wrap">⚖️</div>
+            <div class="profile-check">✓</div>
+          </div>
+          <div class="profile-name">Équilibré</div>
+          <div class="profile-desc">Compromis rendement / risque. Volatilité modérée, objectif 4–6 % /an.</div>
+          <span class="profile-horizon">Horizon 5–10 ans</span>
+        </div>
+        <div class="profile-card profile-dynamique" data-profile="dynamique" onclick="setProfile('dynamique')">
+          <div class="profile-top">
+            <div class="profile-icon-wrap">🚀</div>
+            <div class="profile-check">✓</div>
+          </div>
+          <div class="profile-name">Dynamique</div>
+          <div class="profile-desc">Maximisation du rendement long terme. Forte volatilité acceptée.</div>
+          <span class="profile-horizon">Horizon &gt; 10 ans</span>
+        </div>
+      </div>
+
+      <!-- Barre de score de risque -->
+      <div class="risk-score-block">
+        <span class="risk-score-label">Niveau de risque du portefeuille</span>
+        <div class="risk-bar-wrap">
+          <div class="risk-bar-track">
+            <div class="risk-bar-fill" id="riskBarFill" style="width:50%">
+              <div class="risk-bar-thumb" id="riskBarThumb"></div>
+            </div>
+          </div>
+          <div class="risk-bar-ticks">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+          </div>
+        </div>
+        <span class="risk-score-value" id="riskScoreValue">5<span style="font-size:0.7rem;font-weight:500;color:var(--muted)">/10</span></span>
+      </div>
+
+      <div class="allocation-grid" id="allocationSection">
+        <div class="donut-container">
+          <div class="donut-wrapper">
+            <canvas id="donutChart" width="220" height="220"></canvas>
+            <div class="donut-center">
+              <div class="donut-center-value" id="donutCenterVal">—</div>
+              <div class="donut-center-label">Actifs risqués</div>
+            </div>
+          </div>
+          <div class="donut-legend" id="donutLegend">
+            <!-- Rempli par JS -->
+          </div>
+          <div class="context-message" id="contextMessage">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+        <div>
+          <div class="alloc-header">
+            <span>Classe d'actifs</span>
+            <span>%</span>
+            <span>Pondération</span>
+            <span>Commentaire</span>
+          </div>
+          <div class="allocation-table" id="allocTable">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="page-footer">
+    <div class="container">
+      <p>© 2026 FinanceClé — <a href="index.html">Retour à l'accueil</a> · Données pédagogiques, pas un conseil en investissement</p>
+    </div>
+  </footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIGURATION DES INDICATEURS
+════════════════════════════════════════════════════════════════ */
+
+const SOURCE_STYLES = {
+  bce:            { label: 'BCE',            cls: 'source-bce' },
+  eurostat:       { label: 'Eurostat',       cls: 'source-eurostat' },
+  yahoo:          { label: 'Yahoo Finance',  cls: 'source-yahoo' },
+  banquemondiale: { label: 'Banque Mondiale',cls: 'source-banquemondiale' },
+  indicatif:      { label: 'Indicatif',      cls: 'source-indicatif' }
+};
+
+const indicators = {
+  inflation: { name: 'Inflation Zone Euro (IPC)', unit: '%',
+    description: 'Variation annuelle des prix à la consommation (IPCH). Cible BCE : ~2 %.',
+    source: 'eurostat' },
+  bce:       { name: 'Taux Directeur BCE',        unit: '%',
+    description: 'Taux des opérations principales de refinancement de la Banque Centrale Européenne.',
+    source: 'bce' },
+  pmi:       { name: 'PMI Composite Europe',      unit: '',
+    description: 'Indice des directeurs d\'achats. >50 = expansion, <50 = contraction.',
+    source: 'indicatif' },
+  vix:       { name: 'VIX — Volatilité',          unit: '',
+    description: 'Indice de volatilité implicite du S&P 500. <20 = calme, 20–30 = stress, >30 = panique.',
+    source: 'yahoo' },
+  gdp:       { name: 'Croissance PIB Europe',     unit: '%',
+    description: 'Variation du PIB de la Zone Euro sur le trimestre précédent (données CVS-CJO Eurostat).',
+    source: 'eurostat' },
+  unemp:     { name: 'Taux de Chômage Europe',    unit: '%',
+    description: 'Taux de chômage harmonisé de la zone euro.',
+    source: 'banquemondiale' }
+};
+
+// Dernières valeurs connues — fallback si API indisponible
+const FALLBACK = {
+  inflation: { value: 2.3, prev: 2.6, period: 'mars 2026' },
+  bce:       { value: 2.50, prev: 2.75, period: 'avr. 2026' },
+  pmi:       { value: 51.2, prev: 50.4, period: 'avr. 2026' },
+  vix:       { value: 19.8, prev: 17.2, period: null },
+  gdp:       { value: 0.4,  prev: 0.2,  period: 'T4 2024' },
+  unemp:     { value: 6.1,  prev: 6.3,  period: '2024' }
+};
+
+let currentData = {};
+
+/* ════════════════════════════════════════════════════════════════
+   RÈGLES DE COULEUR & TENDANCE
+════════════════════════════════════════════════════════════════ */
+
+const colorRules = {
+  inflation: v => v < 2 ? 'neutre' : v <= 3 ? 'favorable' : v <= 5 ? 'neutre' : 'defavorable',
+  bce:       v => v < 2 ? 'favorable' : v <= 3.5 ? 'neutre' : 'defavorable',
+  pmi:       v => v > 53 ? 'favorable' : v >= 50 ? 'neutre' : 'defavorable',
+  vix:       v => v < 18 ? 'favorable' : v <= 25 ? 'neutre' : 'defavorable',
+  gdp:       v => v > 2 ? 'favorable' : v >= 0 ? 'neutre' : 'defavorable',
+  unemp:     v => v < 6 ? 'favorable' : v <= 8 ? 'neutre' : 'defavorable'
+};
+
+const trendRules = {
+  inflation: (v, prev) => v > prev + 0.2 ? 'up' : v < prev - 0.2 ? 'down' : 'stable',
+  bce:       (v, prev) => v > prev ? 'up' : v < prev ? 'down' : 'stable',
+  pmi:       (v, prev) => v > prev + 0.5 ? 'up' : v < prev - 0.5 ? 'down' : 'stable',
+  vix:       (v, prev) => v > prev + 1 ? 'up' : v < prev - 1 ? 'down' : 'stable',
+  gdp:       (v, prev) => v > prev + 0.2 ? 'up' : v < prev - 0.2 ? 'down' : 'stable',
+  unemp:     (v, prev) => v > prev + 0.1 ? 'up' : v < prev - 0.1 ? 'down' : 'stable'
+};
+
+// Pour ces indicateurs, une hausse est défavorable aux marchés
+const trendInverted = { inflation: true, bce: true, vix: true, unemp: true };
+
+/* ════════════════════════════════════════════════════════════════
+   PHASES DU CYCLE
+════════════════════════════════════════════════════════════════ */
+
+const phases = {
+  expansion: {
+    name: 'Expansion', icon: '📈', color: '#10b981', cssClass: 'phase-expansion',
+    label: 'Phase haussière',
+    description: 'La croissance est soutenue, l\'emploi progresse et la confiance est forte. Les bénéfices des entreprises augmentent et les marchés actions performent bien. C\'est la phase la plus favorable pour les actifs risqués.',
+    signals: [
+      { text: 'PMI > 50 (expansion)', color: '#10b981' },
+      { text: 'PIB en croissance positive', color: '#10b981' },
+      { text: 'Chômage en baisse', color: '#10b981' },
+      { text: 'Inflation modérée', color: '#f59e0b' }
+    ]
+  },
+  surchauffe: {
+    name: 'Surchauffe', icon: '🔥', color: '#ef4444', cssClass: 'phase-surchauffe',
+    label: 'Risque inflationniste',
+    description: 'La croissance est trop rapide et l\'inflation s\'emballe. La BCE relève ses taux pour refroidir l\'économie. Les obligations souffrent, les matières premières et l\'or brillent. Moment de réduire les risques.',
+    signals: [
+      { text: 'Inflation > 4 %', color: '#ef4444' },
+      { text: 'PMI très élevé (> 55)', color: '#f59e0b' },
+      { text: 'BCE en mode hawkish', color: '#ef4444' },
+      { text: 'VIX en hausse', color: '#f59e0b' }
+    ]
+  },
+  recession: {
+    name: 'Contraction / Récession', icon: '📉', color: '#6366f1', cssClass: 'phase-recession',
+    label: 'Phase baissière',
+    description: 'L\'activité économique se contracte, le chômage monte et la confiance s\'effondre. C\'est la phase la plus difficile pour les actifs risqués. Les obligations d\'État et l\'or jouent leur rôle de refuges.',
+    signals: [
+      { text: 'PIB négatif (≥ 2 trimestres)', color: '#ef4444' },
+      { text: 'PMI < 48', color: '#ef4444' },
+      { text: 'Chômage en hausse rapide', color: '#ef4444' },
+      { text: 'VIX élevé (> 25)', color: '#f59e0b' }
+    ]
+  },
+  reprise: {
+    name: 'Reprise', icon: '🌱', color: '#06b6d4', cssClass: 'phase-reprise',
+    label: 'Redémarrage',
+    description: 'L\'économie sort progressivement de la récession. La BCE assouplit sa politique, les PMI remontent et les premiers signes de reprise de l\'emploi apparaissent. Fenêtre d\'opportunité pour se repositionner sur les actifs risqués.',
+    signals: [
+      { text: 'PMI remonte vers 50', color: '#06b6d4' },
+      { text: 'Inflation basse / déflation', color: '#06b6d4' },
+      { text: 'BCE accommodante', color: '#10b981' },
+      { text: 'PIB se stabilise', color: '#06b6d4' }
+    ]
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   PROFILS DE RISQUE
+════════════════════════════════════════════════════════════════ */
+
+const PROFILES = {
+  prudent:   { label: 'Prudent',   icon: '🛡️', color: '#10b981', themeColor: 'var(--green)' },
+  equilibre: { label: 'Équilibré', icon: '⚖️', color: '#3b82f6', themeColor: 'var(--blue)' },
+  dynamique: { label: 'Dynamique', icon: '🚀', color: '#6366f1', themeColor: 'var(--purple)' }
+};
+
+let currentProfile = 'prudent';  // profil actif par défaut
+let currentPhase   = 'expansion'; // phase active (mise à jour après fetch)
+
+/* ── Matrice 4 phases × 3 profils ── */
+// Helper : construit un asset Actions avec sous-répartition géographique
+function mkActions(total, commentaire, zePct, usPct, emPct) {
+  return { name: 'Actions Monde', icon: '📊', pct: total, color: '#6366f1', comment: commentaire,
+    sub: [
+      { name: 'Zone Euro',           pct: zePct, color: '#818cf8' },
+      { name: 'États-Unis',          pct: usPct, color: '#a5b4fc' },
+      { name: 'Marchés émergents',   pct: emPct, color: '#c7d2fe' }
+    ]
+  };
+}
+
+const ALLOCATIONS = {
+  expansion: {
+    prudent: { title: 'Capital protégé, croissance modérée', assets: [
+      mkActions(35, 'Marchés développés seulement', 14, 16, 5),
+      { name: 'Obligations',         icon: '📃', pct: 40, color: '#06b6d4', comment: 'Core du portefeuille' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 15, color: '#10b981', comment: 'Revenu régulier' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  5, color: '#f59e0b', comment: 'Couverture légère' },
+      { name: 'Liquidités',          icon: '💶', pct:  5, color: '#94a3b8', comment: 'Disponible à tout moment' }
+    ]},
+    equilibre: { title: 'Croissance équilibrée', assets: [
+      mkActions(55, 'Moteur principal de rendement', 20, 23, 12),
+      { name: 'Obligations',         icon: '📃', pct: 25, color: '#06b6d4', comment: 'Coussin de stabilité' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 10, color: '#10b981', comment: 'Revenu régulier' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  5, color: '#f59e0b', comment: 'Couverture légère' },
+      { name: 'Liquidités',          icon: '💶', pct:  5, color: '#94a3b8', comment: 'Opportunités à saisir' }
+    ]},
+    dynamique: { title: 'Surpondérer les actions', assets: [
+      mkActions(75, 'Exposition maximale aux marchés', 22, 30, 23),
+      { name: 'Obligations',         icon: '📃', pct: 10, color: '#06b6d4', comment: 'Sécurité résiduelle' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct:  8, color: '#10b981', comment: 'Diversification réelle' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  2, color: '#f59e0b', comment: 'Micro-couverture' },
+      { name: 'Liquidités',          icon: '💶', pct:  5, color: '#94a3b8', comment: 'Réserve tactique' }
+    ]}
+  },
+  surchauffe: {
+    prudent: { title: 'Défensif anti-inflation', assets: [
+      mkActions(20, 'Secteurs défensifs uniquement', 8, 9, 3),
+      { name: 'Obligations',         icon: '📃', pct: 30, color: '#06b6d4', comment: 'Duration très courte / OATi' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 20, color: '#10b981', comment: 'Actif réel, protège l\'inflation' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 20, color: '#f59e0b', comment: 'Bouclier inflationniste' },
+      { name: 'Liquidités',          icon: '💶', pct: 10, color: '#94a3b8', comment: 'Attendre le pic' }
+    ]},
+    equilibre: { title: 'Matières premières & actifs réels', assets: [
+      mkActions(35, 'Réduire exposition actions', 13, 15, 7),
+      { name: 'Obligations',         icon: '📃', pct: 15, color: '#06b6d4', comment: 'Duration courte, taux variables' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 18, color: '#10b981', comment: 'Actif réel anti-inflation' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 22, color: '#f59e0b', comment: 'Refuge inflationniste fort' },
+      { name: 'Liquidités',          icon: '💶', pct: 10, color: '#94a3b8', comment: 'Prudence, taux élevés' }
+    ]},
+    dynamique: { title: 'Commodities & énergie', assets: [
+      mkActions(50, 'Surpondérer énergie & matériaux', 15, 20, 15),
+      { name: 'Obligations',         icon: '📃', pct:  5, color: '#06b6d4', comment: 'Exposition minimale' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 18, color: '#10b981', comment: 'Actif réel, valeur refuge' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 22, color: '#f59e0b', comment: 'Cœur de la stratégie' },
+      { name: 'Liquidités',          icon: '💶', pct:  5, color: '#94a3b8', comment: 'Saisir les replis' }
+    ]}
+  },
+  recession: {
+    prudent: { title: 'Préservation maximale du capital', assets: [
+      mkActions(15, 'Secteurs défensifs : santé, utilities', 6, 7, 2),
+      { name: 'Obligations',         icon: '📃', pct: 50, color: '#06b6d4', comment: 'OAT / Bunds, valeur refuge' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct:  5, color: '#10b981', comment: 'Alléger : liquidité réduite' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 15, color: '#f59e0b', comment: 'Or : valeur refuge absolue' },
+      { name: 'Liquidités',          icon: '💶', pct: 15, color: '#94a3b8', comment: 'Poudre sèche, rester flexible' }
+    ]},
+    equilibre: { title: 'Défensif — préparer le rebond', assets: [
+      mkActions(22, 'Actions défensives seulement', 8, 10, 4),
+      { name: 'Obligations',         icon: '📃', pct: 42, color: '#06b6d4', comment: 'Refuge & duration moyenne' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct:  5, color: '#10b981', comment: 'Réduire l\'exposition' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 18, color: '#f59e0b', comment: 'Or pour amortir les chocs' },
+      { name: 'Liquidités',          icon: '💶', pct: 13, color: '#94a3b8', comment: 'Acheter sur les creux' }
+    ]},
+    dynamique: { title: 'Positionnement pour le rebond', assets: [
+      mkActions(30, 'Accumuler sur les creux de marché', 10, 12, 8),
+      { name: 'Obligations',         icon: '📃', pct: 35, color: '#06b6d4', comment: 'Protection & rendement' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct:  5, color: '#10b981', comment: 'Réduire, conserver du cash' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct: 15, color: '#f59e0b', comment: 'Valeur refuge tactique' },
+      { name: 'Liquidités',          icon: '💶', pct: 15, color: '#94a3b8', comment: 'Munitions pour le rebond' }
+    ]}
+  },
+  reprise: {
+    prudent: { title: 'Repositionnement progressif & prudent', assets: [
+      mkActions(30, 'Augmenter graduellement', 12, 13, 5),
+      { name: 'Obligations',         icon: '📃', pct: 35, color: '#06b6d4', comment: 'Allonger progressivement' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 15, color: '#10b981', comment: 'Reprend de la valeur' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  8, color: '#f59e0b', comment: 'Réduire progressivement' },
+      { name: 'Liquidités',          icon: '💶', pct: 12, color: '#94a3b8', comment: 'Déployer sur confirmation' }
+    ]},
+    equilibre: { title: 'Repositionnement actif', assets: [
+      mkActions(50, 'Renforcer progressivement', 18, 21, 11),
+      { name: 'Obligations',         icon: '📃', pct: 22, color: '#06b6d4', comment: 'Duration longue, taux en baisse' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 15, color: '#10b981', comment: 'Bon point d\'entrée' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  7, color: '#f59e0b', comment: 'Alléger le refuge' },
+      { name: 'Liquidités',          icon: '💶', pct:  6, color: '#94a3b8', comment: 'Déployer sur les replis' }
+    ]},
+    dynamique: { title: 'Offensive — saisir le cycle', assets: [
+      mkActions(68, 'Cycliques, small caps, émergents', 20, 27, 21),
+      { name: 'Obligations',         icon: '📃', pct: 12, color: '#06b6d4', comment: 'Duration longue, levier taux' },
+      { name: 'Immobilier (SCPI)',    icon: '🏢', pct: 12, color: '#10b981', comment: 'Rebond des valorisations' },
+      { name: 'Or / Mat. premières', icon: '🥇', pct:  4, color: '#f59e0b', comment: 'Réduire à minimum' },
+      { name: 'Liquidités',          icon: '💶', pct:  4, color: '#94a3b8', comment: 'Rester investis' }
+    ]}
+  }
+};
+
+/* ── Scores de risque 1-10 ── */
+const RISK_SCORES = {
+  expansion:  { prudent: 3, equilibre: 5, dynamique: 8 },
+  surchauffe: { prudent: 4, equilibre: 6, dynamique: 8 },
+  recession:  { prudent: 3, equilibre: 5, dynamique: 7 },
+  reprise:    { prudent: 3, equilibre: 5, dynamique: 8 }
+};
+
+/* ── Messages contextuels ── */
+const MESSAGES = {
+  expansion: {
+    prudent: {
+      icon: '🛡️', title: 'Expansion — profil Prudent',
+      text: 'Vous participez modérément à la croissance tout en protégeant votre capital. Vos obligations investment-grade et vos SCPI assurent stabilité et revenus réguliers. Restez à l\'écart des valeurs très cycliques.',
+      bg: 'rgba(16,185,129,0.07)', border: 'rgba(16,185,129,0.2)'
+    },
+    equilibre: {
+      icon: '📈', title: 'Expansion — profil Équilibré',
+      text: 'La croissance économique joue en votre faveur. Concentrez-vous sur des ETF diversifiés monde et des obligations investment-grade. Rééquilibrez chaque trimestre pour maintenir vos cibles.',
+      bg: 'rgba(59,130,246,0.07)', border: 'rgba(59,130,246,0.2)'
+    },
+    dynamique: {
+      icon: '🚀', title: 'Expansion — profil Dynamique',
+      text: 'Les actions mondiales sont votre principal moteur de performance. Surpondérez les marchés développés et capitalisez sur les secteurs cycliques (technologie, consommation discrétionnaire). Maintenez une exposition maximale.',
+      bg: 'rgba(99,102,241,0.07)', border: 'rgba(99,102,241,0.2)'
+    }
+  },
+  surchauffe: {
+    prudent: {
+      icon: '🛡️', title: 'Surchauffe — profil Prudent',
+      text: 'L\'inflation érode les obligations à longue duration. Privilégiez les OATi indexées sur l\'inflation et les obligations à taux variable. Vos SCPI diversifiées constituent un bouclier efficace contre la hausse des prix.',
+      bg: 'rgba(239,68,68,0.07)', border: 'rgba(239,68,68,0.2)'
+    },
+    equilibre: {
+      icon: '🔥', title: 'Surchauffe — profil Équilibré',
+      text: 'Les matières premières et l\'or deviennent vos alliés contre l\'inflation. Raccourcissez la duration obligataire et renforcez les actifs réels. Les secteurs énergie et matériaux surperforment dans ce contexte.',
+      bg: 'rgba(245,158,11,0.07)', border: 'rgba(245,158,11,0.2)'
+    },
+    dynamique: {
+      icon: '⚡', title: 'Surchauffe — profil Dynamique',
+      text: 'Profitez de la surchauffe en surpondérant les commodities et les actions dans les secteurs énergie/matériaux. Votre exposition élevée à l\'or et aux matières premières vous offre une couverture inflationniste et un potentiel de hausse.',
+      bg: 'rgba(245,158,11,0.07)', border: 'rgba(245,158,11,0.2)'
+    }
+  },
+  recession: {
+    prudent: {
+      icon: '🛡️', title: 'Récession — profil Prudent',
+      text: 'La préservation du capital est primordiale. Vos obligations d\'État (OAT, Bunds) et votre or protègent efficacement votre patrimoine. Conservez des liquidités importantes pour vous repositionner au creux du cycle.',
+      bg: 'rgba(99,102,241,0.07)', border: 'rgba(99,102,241,0.2)'
+    },
+    equilibre: {
+      icon: '⚖️', title: 'Récession — profil Équilibré',
+      text: 'Prudence et patience. Vos obligations refuges amortissent les chocs. Gardez suffisamment de liquidités pour vous repositionner progressivement sur les actions quand les PMI et le crédit montreront les premiers signaux de reprise.',
+      bg: 'rgba(99,102,241,0.07)', border: 'rgba(99,102,241,0.2)'
+    },
+    dynamique: {
+      icon: '🎯', title: 'Récession — profil Dynamique',
+      text: 'La récession est une opportunité d\'accumulation pour les investisseurs patients. Maintenez des actions défensives (santé, utilities, consommation de base) et constituez progressivement des positions sur les secteurs cycliques qui rebondiront fort.',
+      bg: 'rgba(99,102,241,0.07)', border: 'rgba(99,102,241,0.2)'
+    }
+  },
+  reprise: {
+    prudent: {
+      icon: '🌱', title: 'Reprise — profil Prudent',
+      text: 'La reprise s\'amorce : renforcez vos SCPI qui bénéficient de la baisse des taux. Allongez progressivement la duration obligataire. Attendez la confirmation de 2 trimestres de PMI au-dessus de 50 avant d\'augmenter vos actions.',
+      bg: 'rgba(6,182,212,0.07)', border: 'rgba(6,182,212,0.2)'
+    },
+    equilibre: {
+      icon: '🌱', title: 'Reprise — profil Équilibré',
+      text: 'La reprise offre une fenêtre d\'entrée attractive. Allongez la duration obligataire pour bénéficier de la baisse des taux. Renforcez les actions cycliques et les marchés émergents à mesure que les PMI remontent vers 52–55.',
+      bg: 'rgba(6,182,212,0.07)', border: 'rgba(6,182,212,0.2)'
+    },
+    dynamique: {
+      icon: '🚀', title: 'Reprise — profil Dynamique',
+      text: 'La reprise est la phase idéale pour votre profil. Investissez agressivement sur les cycliques, les petites capitalisations et les marchés émergents. La BCE accommodante est votre alliée : profitez de la duration longue sur les obligations.',
+      bg: 'rgba(6,182,212,0.07)', border: 'rgba(6,182,212,0.2)'
+    }
+  }
+};
+
+/* ════════════════════════════════════════════════════════════════
+   FONCTIONS API
+════════════════════════════════════════════════════════════════ */
+
+// Helper : fetch avec timeout
+function fetchWithTimeout(url, ms = 9000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(id));
+}
+
+// ── 1. BCE : taux directeur MRR ──────────────────────────────────
+async function fetchBCERate() {
+  try {
+    const url = 'https://data-api.ecb.europa.eu/service/data/FM/B.U2.EUR.4F.KR.MRR_FR.LEV?format=jsondata&lastNObservations=2';
+    const res = await fetchWithTimeout(url);
+    if (!res.ok) throw new Error(`BCE HTTP ${res.status}`);
+    const json = await res.json();
+
+    const series = json.dataSets[0].series;
+    const seriesKey = Object.keys(series)[0];
+    const observations = series[seriesKey].observations;
+    // Les clés sont des indices numériques croissants ("0", "1", … "N")
+    const obsKeys = Object.keys(observations).map(Number).sort((a, b) => a - b);
+    if (!obsKeys.length) throw new Error('BCE: aucune observation');
+
+    const lastKey  = obsKeys[obsKeys.length - 1];
+    const prevKey  = obsKeys.length > 1 ? obsKeys[obsKeys.length - 2] : lastKey;
+    const latestVal = observations[lastKey][0];
+    const prevVal   = observations[prevKey][0];
+
+    // Période depuis la dimension temporelle
+    const timeDim = json.structure.dimensions.observation.find(d => d.id === 'TIME_PERIOD');
+    const period  = timeDim?.values?.[lastKey]?.id ?? null;
+
+    return { value: parseFloat(latestVal.toFixed(2)), prev: parseFloat(prevVal.toFixed(2)), period, stale: false };
+  } catch (e) {
+    console.warn('[BCE]', e.message);
+    return null;
+  }
+}
+
+// ── 2. Eurostat : IPCH Zone Euro ─────────────────────────────────
+async function fetchEurostatInflation() {
+  try {
+    const url = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/prc_hicp_manr?geo=EA&coicop=CP00&format=JSON&lastTimePeriod=3';
+    const res = await fetchWithTimeout(url, 12000);
+    if (!res.ok) throw new Error(`Eurostat HTTP ${res.status}`);
+    const json = await res.json();
+
+    // JSON-stat : l'index temporel est dans json.dimension.time.category.index
+    const timeCateg = json.dimension.time.category;
+    const timePeriods = Object.keys(timeCateg.index).sort();
+    if (!timePeriods.length) throw new Error('Eurostat: aucune période');
+
+    const latest = timePeriods[timePeriods.length - 1];
+    const prev   = timePeriods.length > 1 ? timePeriods[timePeriods.length - 2] : latest;
+
+    const latestIdx = timeCateg.index[latest];
+    const prevIdx   = timeCateg.index[prev];
+
+    // Avec geo=EA & coicop=CP00, le tableau de valeurs est indexé par le temps uniquement
+    const val  = json.value[latestIdx] ?? json.value[String(latestIdx)];
+    const valP = json.value[prevIdx]   ?? json.value[String(prevIdx)];
+
+    if (val === undefined || val === null) throw new Error('Eurostat: valeur manquante');
+
+    return {
+      value: parseFloat(Number(val).toFixed(1)),
+      prev:  (valP !== undefined && valP !== null) ? parseFloat(Number(valP).toFixed(1)) : parseFloat(Number(val).toFixed(1)),
+      period: latest,
+      stale: false
+    };
+  } catch (e) {
+    console.warn('[Eurostat]', e.message);
+    return null;
+  }
+}
+
+// ── 3. VIX via proxy allorigins (contournement CORS) ────────────
+async function fetchVIX() {
+  try {
+    // Yahoo Finance bloque les requêtes CORS directes depuis un navigateur.
+    // On passe par le proxy allorigins.win qui renvoie { contents: "<json>", status:{...} }
+    const yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/%5EVIX?interval=1d&range=5d';
+    const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(yahooUrl);
+
+    const res = await fetchWithTimeout(proxyUrl, 12000);
+    if (!res.ok) throw new Error(`allorigins HTTP ${res.status}`);
+
+    const wrapper = await res.json();
+    if (!wrapper.contents) throw new Error('allorigins: champ contents vide');
+
+    const json   = JSON.parse(wrapper.contents);
+    const result = json.chart?.result?.[0];
+    if (!result) throw new Error('Yahoo: pas de résultat chart');
+
+    const closes = result.indicators?.quote?.[0]?.close ?? [];
+    const valid  = closes.filter(v => v !== null && v !== undefined);
+    if (!valid.length) throw new Error('Yahoo: aucune clôture');
+
+    const latest = valid[valid.length - 1];
+    const prev   = valid.length > 1 ? valid[valid.length - 2] : latest;
+    const ts     = result.meta?.regularMarketTime;
+    const period = ts ? new Date(ts * 1000).toLocaleDateString('fr-FR') : null;
+
+    return { value: parseFloat(latest.toFixed(2)), prev: parseFloat(prev.toFixed(2)), period, stale: false };
+  } catch (e) {
+    console.warn('[VIX/allorigins]', e.message);
+    return null;
+  }
+}
+
+// ── 4. Eurostat : PIB Zone Euro (trimestriel, q-o-q) ────────────
+async function fetchEurostatGDP() {
+  try {
+    // namq_10_gdp : comptes nationaux trimestriels
+    // unit=CLV_PCH_PRE : variation en % sur le trimestre précédent (CVS-CJO)
+    const url = 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/namq_10_gdp'
+      + '?geo=EA&na_item=B1GQ&s_adj=SCA&unit=CLV_PCH_PRE&format=JSON&lastTimePeriod=4';
+    const res = await fetchWithTimeout(url, 14000);
+    if (!res.ok) throw new Error(`Eurostat GDP HTTP ${res.status}`);
+    const json = await res.json();
+
+    // JSON-stat : récupérer l'index temporel
+    const timeCateg  = json.dimension.time.category;
+    const timePeriods = Object.keys(timeCateg.index).sort(); // ex. ["2024-Q1","2024-Q2",...]
+    if (!timePeriods.length) throw new Error('Eurostat GDP: aucune période');
+
+    const latest  = timePeriods[timePeriods.length - 1];
+    const prevPer = timePeriods.length > 1 ? timePeriods[timePeriods.length - 2] : latest;
+
+    const latestIdx = timeCateg.index[latest];
+    const prevIdx   = timeCateg.index[prevPer];
+
+    // Avec tous les filtres appliqués, le tableau value est indexé par le temps uniquement
+    // (les autres dimensions sont fixes : geo=EA, na_item=B1GQ, s_adj=SCA, unit=CLV_PCH_PRE)
+    const val  = json.value[latestIdx] ?? json.value[String(latestIdx)];
+    const valP = json.value[prevIdx]   ?? json.value[String(prevIdx)];
+
+    if (val === undefined || val === null) throw new Error('Eurostat GDP: valeur manquante');
+
+    // Formater la période : "2024-Q3" → "T3 2024"
+    const formatPeriod = p => p.replace(/^(\d{4})-Q(\d)$/, 'T$2 $1');
+
+    return {
+      value:  parseFloat(Number(val).toFixed(2)),
+      prev:   (valP !== undefined && valP !== null) ? parseFloat(Number(valP).toFixed(2)) : parseFloat(Number(val).toFixed(2)),
+      period: formatPeriod(latest),
+      stale:  false
+    };
+  } catch (e) {
+    console.warn('[Eurostat GDP]', e.message);
+    return null;
+  }
+}
+
+// ── 5. Banque Mondiale : chômage uniquement ──────────────────────
+async function fetchWorldBank(indicator, countryCode) {
+  try {
+    const url = `https://api.worldbank.org/v2/country/${countryCode}/indicator/${indicator}?format=json&mrv=2&per_page=2`;
+    const res = await fetchWithTimeout(url, 12000);
+    if (!res.ok) throw new Error(`WB HTTP ${res.status}`);
+    const json = await res.json();
+
+    const entries = (json[1] ?? []).filter(e => e.value !== null && e.value !== undefined);
+    if (!entries.length) throw new Error('WB: aucune valeur');
+
+    return {
+      value:  parseFloat(entries[0].value.toFixed(2)),
+      prev:   entries.length > 1 ? parseFloat(entries[1].value.toFixed(2)) : parseFloat(entries[0].value.toFixed(2)),
+      period: entries[0].date,
+      stale:  false
+    };
+  } catch (e) {
+    console.warn('[WorldBank]', e.message);
+    return null;
+  }
+}
+
+// ── Orchestration ─────────────────────────────────────────────────
+async function fetchData() {
+  // Toutes les requêtes en parallèle
+  const [bceRes, infRes, vixRes, gdpRes, unempRes] = await Promise.all([
+    fetchBCERate(),
+    fetchEurostatInflation(),
+    fetchVIX(),
+    fetchEurostatGDP(),                        // ← Eurostat trimestriel (plus récent que WB)
+    fetchWorldBank('SL.UEM.TOTL.ZS', 'XC')    // ← Banque Mondiale (chômage uniquement)
+  ]);
+
+  const make = (key, result) =>
+    result ? { ...result, stale: false } : { ...FALLBACK[key], stale: true };
+
+  return {
+    inflation: make('inflation', infRes),
+    bce:       make('bce',       bceRes),
+    pmi:       { ...FALLBACK.pmi, stale: false, indicative: true }, // Pas d'API gratuite
+    vix:       make('vix',       vixRes),
+    gdp:       make('gdp',       gdpRes),
+    unemp:     make('unemp',     unempRes)
+  };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DÉTECTION DE PHASE
+════════════════════════════════════════════════════════════════ */
+
+function detectPhase(data) {
+  const { inflation, bce, pmi, vix, gdp, unemp } = data;
+  const scores = { expansion: 0, surchauffe: 0, recession: 0, reprise: 0 };
+
+  if      (pmi.value > 53)  scores.expansion += 2;
+  else if (pmi.value >= 50) { scores.expansion += 1; scores.reprise += 1; }
+  else if (pmi.value >= 47)   scores.reprise   += 1;
+  else                        scores.recession  += 2;
+
+  if      (gdp.value > 2.5)  { scores.expansion += 2; scores.surchauffe += 1; }
+  else if (gdp.value > 0.5)    scores.expansion  += 1;
+  else if (gdp.value >= -0.5) { scores.reprise   += 1; scores.recession  += 1; }
+  else                          scores.recession  += 2;
+
+  if      (inflation.value > 4.5)  scores.surchauffe += 3;
+  else if (inflation.value > 3)    scores.surchauffe += 2;
+  else if (inflation.value >= 1.5) scores.expansion  += 1;
+  else                            { scores.reprise    += 1; scores.recession += 1; }
+
+  if      (bce.value < 1.5)  { scores.reprise    += 2; scores.recession  += 1; }
+  else if (bce.value <= 2.5)   scores.expansion   += 1;
+  else if (bce.value <= 4)     scores.surchauffe  += 1;
+  else                         scores.surchauffe  += 2;
+
+  if      (vix.value < 18)   scores.expansion  += 1;
+  else if (vix.value <= 35) { scores.recession += 1; scores.surchauffe += 1; }
+  else                        scores.recession  += 2;
+
+  if   (unemp.value < 6)   scores.expansion += 1;
+  else if (unemp.value > 7.5) scores.recession += 1;
+
+  if (pmi.value > pmi.prev) scores.expansion += 1;
+  else                       scores.recession  += 1;
+
+  let maxScore = 0, winner = 'expansion';
+  for (const [phase, score] of Object.entries(scores)) {
+    if (score > maxScore) { maxScore = score; winner = phase; }
+  }
+  return { phase: winner, scores };
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RENDU HTML
+════════════════════════════════════════════════════════════════ */
+
+function statusLabel(s) {
+  return s === 'favorable' ? 'Favorable' : s === 'neutre' ? 'Neutre' : 'Défavorable';
+}
+function badgeClass(s) {
+  return s === 'favorable' ? 'badge-favorable' : s === 'neutre' ? 'badge-neutre' : 'badge-defavorable';
+}
+
+function renderTrendArrow(key, v, prev) {
+  const trend = trendRules[key](v, prev);
+  const inv   = trendInverted[key];
+  if (trend === 'stable') return `<span class="ind-trend trend-stable">→</span>`;
+  if (trend === 'up')     return `<span class="ind-trend ${inv ? 'trend-up' : 'trend-up-good'}">↑</span>`;
+  return                         `<span class="ind-trend ${inv ? 'trend-down' : 'trend-down-bad'}">↓</span>`;
+}
+
+function renderIndicators(data) {
+  const grid = document.getElementById('indicatorsGrid');
+  let html = '';
+
+  for (const key of Object.keys(indicators)) {
+    const ind    = indicators[key];
+    const d      = data[key];
+    const status = colorRules[key](d.value);
+    const src    = SOURCE_STYLES[ind.source];
+
+    // Badge de source
+    const sourceBadge = `<span class="source-badge ${src.cls}">${src.label}</span>`;
+
+    // Période / millésime
+    const periodLabel = d.period
+      ? `<span class="period-label">${d.period}</span>`
+      : '';
+
+    // Avertissement données non actualisées
+    const staleWarn = d.stale
+      ? `<span class="stale-warn">⚠️ Données non actualisées</span>`
+      : '';
+
+    // Note spécifique PMI
+    const pmiNote = d.indicative
+      ? `<div class="pmi-note">📊 Données indicatives — PMI non disponible via API gratuite. Dernière valeur publiée : <strong>${d.value}</strong> (S&P Global, avr. 2026).</div>`
+      : '';
+
+    html += `
+      <div class="indicator-card ${status}">
+        <div class="ind-header">
+          <div class="ind-name">${ind.name}</div>
+          <span class="ind-status-badge ${badgeClass(status)}">${statusLabel(status)}</span>
+        </div>
+        <div class="ind-value-row">
+          <span class="ind-value">${d.value}${ind.unit}</span>
+          ${renderTrendArrow(key, d.value, d.prev)}
+        </div>
+        <div class="ind-description">${ind.description}</div>
+        ${pmiNote}
+        <div class="ind-footer">
+          ${sourceBadge}
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            ${periodLabel}
+            ${staleWarn}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+}
+
+function renderCyclePhases(currentPhase) {
+  const phaseOrder = ['reprise', 'expansion', 'surchauffe', 'recession'];
+  let html = '';
+  for (const key of phaseOrder) {
+    const p = phases[key];
+    const isActive = key === currentPhase;
+    html += `
+      <div class="mini-phase ${isActive ? 'active mini-phase-' + key : ''}">
+        <div class="mini-phase-icon">${p.icon}</div>
+        <div class="mini-phase-name">${p.name}</div>
+        <div class="mini-phase-desc">${p.label}</div>
+      </div>
+    `;
+  }
+  document.getElementById('cyclePhasesMini').innerHTML = html;
+}
+
+function renderCycleCard(phaseKey) {
+  const p = phases[phaseKey];
+  const signalsHtml = p.signals.map(s => `
+    <div class="signal-row">
+      <span class="signal-dot" style="background:${s.color}"></span>
+      <span>${s.text}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('cycleCard').innerHTML = `
+    <div class="cycle-card ${p.cssClass}" style="border-color:${p.color}30">
+      <div class="cycle-icon">${p.icon}</div>
+      <div class="cycle-info">
+        <span class="phase-label">${p.label}</span>
+        <h3>Phase : ${p.name}</h3>
+        <p>${p.description}</p>
+      </div>
+      <div class="cycle-signals">
+        <p style="font-size:0.78rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">Signaux clés</p>
+        ${signalsHtml}
+      </div>
+    </div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PROFIL — INTERACTIONS
+════════════════════════════════════════════════════════════════ */
+
+function setProfile(profile) {
+  if (profile === currentProfile) return;
+  currentProfile = profile;
+
+  // Mettre à jour l'UI du sélecteur
+  document.querySelectorAll('.profile-card').forEach(card => {
+    card.classList.toggle('active', card.dataset.profile === profile);
+  });
+
+  // Mettre à jour le rendu allocation + score + message
+  renderAllocation(currentPhase, profile);
+  renderRiskScore(currentPhase, profile);
+  renderContextMessage(currentPhase, profile);
+}
+
+function renderRiskScore(phase, profile) {
+  const score = RISK_SCORES[phase]?.[profile] ?? 5;
+  const pct   = (score / 10) * 100;
+
+  // Couleur progressive : vert → orange → rouge
+  let color;
+  if (score <= 3)      color = '#10b981';
+  else if (score <= 5) color = '#3b82f6';
+  else if (score <= 7) color = '#f59e0b';
+  else                 color = '#ef4444';
+
+  const fill  = document.getElementById('riskBarFill');
+  const thumb = document.getElementById('riskBarThumb');
+  const val   = document.getElementById('riskScoreValue');
+
+  if (fill)  fill.style.width = pct + '%';
+  if (thumb) thumb.style.borderColor = color;
+  if (val) {
+    val.style.color = color;
+    val.innerHTML   = `${score}<span style="font-size:0.7rem;font-weight:500;color:var(--muted)">/10</span>`;
+  }
+}
+
+function renderContextMessage(phase, profile) {
+  const msg = MESSAGES[phase]?.[profile];
+  const el  = document.getElementById('contextMessage');
+  if (!msg || !el) return;
+
+  el.style.background   = msg.bg;
+  el.style.borderColor  = msg.border;
+  el.innerHTML = `
+    <span class="context-message-icon">${msg.icon}</span>
+    <div>
+      <strong>${msg.title}</strong>
+      ${msg.text}
+    </div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RENDU ALLOCATION
+════════════════════════════════════════════════════════════════ */
+
+let donutChartInstance = null;
+
+function renderAllocation(phaseKey, profile) {
+  profile = profile || currentProfile;
+  const alloc  = ALLOCATIONS[phaseKey]?.[profile] ?? ALLOCATIONS.expansion.equilibre;
+  const labels = alloc.assets.map(a => a.name);
+  const data   = alloc.assets.map(a => a.pct);
+  const colors = alloc.assets.map(a => a.color);
+
+  const riskyPct = alloc.assets
+    .filter(a => a.name === 'Actions Monde')
+    .reduce((s, a) => s + a.pct, 0);
+  document.getElementById('donutCenterVal').textContent = riskyPct + '%';
+
+  const ctx = document.getElementById('donutChart').getContext('2d');
+
+  if (donutChartInstance) {
+    // Mise à jour animée sans recréer le canvas
+    donutChartInstance.data.labels   = labels;
+    donutChartInstance.data.datasets[0].data            = data;
+    donutChartInstance.data.datasets[0].backgroundColor = colors;
+    donutChartInstance.update();
+  } else {
+    donutChartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data, backgroundColor: colors,
+          borderColor: '#1a1a2e', borderWidth: 3, hoverOffset: 8
+        }]
+      },
+      options: {
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: { label: c => `  ${c.label}: ${c.parsed}%` },
+            backgroundColor: '#22223a', titleColor: '#e2e8f0', bodyColor: '#94a3b8',
+            borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, padding: 10
+          }
+        },
+        animation: { duration: 600, easing: 'easeOutQuart' }
+      }
+    });
+  }
+
+  document.getElementById('donutLegend').innerHTML = alloc.assets.map(a => `
+    <div class="legend-item">
+      <span class="legend-color" style="background:${a.color}"></span>
+      <span>${a.name} — <strong style="color:#fff">${a.pct}%</strong></span>
+    </div>
+  `).join('');
+
+  let tableHtml = '';
+  for (const asset of alloc.assets) {
+    tableHtml += `
+      <div class="alloc-row">
+        <div class="asset-name"><span class="asset-icon">${asset.icon}</span>${asset.name}</div>
+        <div class="asset-pct" style="color:${asset.color}">${asset.pct}%</div>
+        <div><div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:${asset.pct}%;background:${asset.color}"></div></div></div>
+        <div class="alloc-comment">${asset.comment}</div>
+      </div>
+    `;
+    if (asset.sub) {
+      for (const sub of asset.sub) {
+        tableHtml += `
+          <div class="alloc-row sub-row">
+            <div class="asset-name" style="font-weight:400;color:var(--muted)">↳ ${sub.name}</div>
+            <div class="asset-pct" style="color:${sub.color}">${sub.pct}%</div>
+            <div><div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:${sub.pct * 2}%;background:${sub.color};opacity:0.7"></div></div></div>
+            <div class="alloc-comment">—</div>
+          </div>
+        `;
+      }
+    }
+  }
+  document.getElementById('allocTable').innerHTML = tableHtml;
+}
+
+function updateTimestamp() {
+  const opts = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  document.getElementById('lastUpdate').textContent = new Date().toLocaleDateString('fr-FR', opts);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   POINT D'ENTRÉE
+════════════════════════════════════════════════════════════════ */
+
+const REFRESH_SVG = `<svg id="refreshIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>`;
+
+async function refreshData() {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  btn.innerHTML = `<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Actualisation…`;
+
+  try {
+    currentData = await fetchData();
+    renderIndicators(currentData);
+    const { phase } = detectPhase(currentData);
+    currentPhase = phase;                         // mémoriser pour les changements de profil
+    renderCyclePhases(phase);
+    renderCycleCard(phase);
+    renderAllocation(phase, currentProfile);
+    renderRiskScore(phase, currentProfile);
+    renderContextMessage(phase, currentProfile);
+    updateTimestamp();
+  } catch (e) {
+    console.error('Erreur refreshData :', e);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `${REFRESH_SVG} Actualiser les données`;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', refreshData);
+</script>
+</body>
+</html>
