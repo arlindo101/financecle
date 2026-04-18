@@ -3,7 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sélection d'Actions — FinanceClé</title>
+  <title>Sélection d'Actions Value Investing | Critères Buffett &amp; Graham — FinanceClé</title>
+  <meta name="description" content="15 actions sélectionnées et scorées selon les critères de Warren Buffett et Benjamin Graham. Analyse value investing : PER, PBR, dividende, ROE, dette. Données avril 2026." />
+  <meta name="keywords" content="value investing, sélection actions, Warren Buffett, Benjamin Graham, PER, PBR, dividende, ROE, nombre de Graham, analyse fondamentale, bourse" />
+  <meta name="author" content="FinanceClé" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Sélection d'Actions Value Investing | Critères Buffett &amp; Graham — FinanceClé" />
+  <meta property="og:description" content="15 actions analysées selon Buffett &amp; Graham : score sur 100, PER, PBR, dividende, dette, ROE et nombre de Graham. Outil pédagogique gratuit." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://arlindo101.github.io/financecle/selection-actions.html" />
+  <meta property="og:site_name" content="FinanceClé" />
+  <link rel="canonical" href="https://arlindo101.github.io/financecle/selection-actions.html" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -222,6 +232,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      margin: 0;
     }
     .method-pts-total {
       font-size: 0.78rem;
@@ -274,6 +285,16 @@
       line-height: 1.5;
     }
     .method-desc strong { color: var(--text); }
+
+    /* ─── SECTION HEADING ───────────────────────────────────────── */
+    .stocks-section-heading {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin: 0 0 12px;
+    }
 
     /* ─── FILTER BAR ─────────────────────────────────────────────── */
     .filter-bar {
@@ -912,7 +933,7 @@
       <!-- METHODOLOGY BOX -->
       <div class="method-box">
         <div class="method-box-header" onclick="toggleMethod()">
-          <div class="method-title">📐 Méthodologie du score Buffett-Graham <span class="method-pts-total">— 100 points maximum</span></div>
+          <h2 class="method-title">📐 Méthodologie du score Buffett-Graham <span class="method-pts-total">— 100 points maximum</span></h2>
           <div class="method-toggle open" id="methodToggle">▼</div>
         </div>
         <div id="methodGrid">
@@ -927,6 +948,9 @@
           </div>
         </div>
       </div>
+
+      <!-- STOCKS SECTION HEADING (SEO) -->
+      <h2 class="stocks-section-heading">Analyse des 15 valeurs sélectionnées</h2>
 
       <!-- FILTER BAR -->
       <div class="filter-bar">

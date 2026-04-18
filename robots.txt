@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://arlindo101.github.io/financecle/sitemap.xml
